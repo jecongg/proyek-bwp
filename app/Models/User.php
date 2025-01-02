@@ -17,10 +17,18 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $connection = "mysql";
+    protected $table = "user";
+    protected $primaryKey = "id";
+    public $incrementing = true;
+    public $timestamps = false;
+
     protected $fillable = [
-        'name',
+        'nama',
         'email',
+        'no_telp',
         'password',
+        'role'
     ];
 
     /**
