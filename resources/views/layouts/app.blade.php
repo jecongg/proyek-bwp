@@ -287,7 +287,7 @@
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
                                 @if(Auth::user()->role === 'Admin')
-                                    <li><a class="dropdown-item" href="/admin/dashboard">Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.products') }}">Manage Products</a></li>
                                 @endif
                                 <li><hr class="dropdown-divider"></li>
                                 <li>

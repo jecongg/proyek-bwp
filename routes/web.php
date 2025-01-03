@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', [CatalogController::class, 'index'])->name('home');
 Route::get('/catalog', [CatalogController::class, 'catalog'])->name('catalog');
@@ -24,14 +25,16 @@ Route::middleware(['auth'])->group(function () {
     // Routes for all authenticated users
 });
 
-Route::middleware(['auth', 'role:Admin'])->group(function () {
-    // Routes only for Admin
+Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::get('/admin/dashboard', function() {
         return view('admin.dashboard');
     });
+    Route::get('/admin/products', [ProductController::class, 'index'])->name('admin.products');
+    Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.products.create');
+    Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
 });
 
-Route::middleware(['auth', 'role:Customer'])->group(function () {
-    // Routes only for Customer
-});
+// Route::middleware(['auth', 'role:Customer'])->group(function () {
+//     // Routes only for Customer
+// });
 
