@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class CheckRole
 {
-    public function handle(Request $request, Closure $next, $role)
+    public function handle(Request $request, Closure $next, string $role)
     {
         // Pastikan user sudah login
         if (!Auth::check()) {
