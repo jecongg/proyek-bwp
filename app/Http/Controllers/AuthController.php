@@ -102,7 +102,7 @@ class AuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'role' => $validated['role']
             ]);
-
+            
             // Login user setelah register
             Auth::login($user);
 
