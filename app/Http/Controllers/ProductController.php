@@ -27,35 +27,22 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'id_category' => 'required|exists:category,id',
-            'image' => 'required|image|mimes:jpeg,png,jpg|max:2048'
+            'url_image' => 'required|url|max:255',
+            'id_category' => 'required|exists:categories,id'
         ], [
             'name.required' => 'Product name is required',
             'description.required' => 'Product description is required',
-            'price.required' => 'Price is required',
-            'price.numeric' => 'Price must be a number',
-            'price.min' => 'Price cannot be negative',
             'stock.required' => 'Stock is required',
             'stock.integer' => 'Stock must be a whole number',
             'stock.min' => 'Stock cannot be negative',
+            'url_image.required' => 'Image URL is required',
+            'url_image.url' => 'Please enter a valid URL',
             'id_category.required' => 'Category is required',
-            'id_category.exists' => 'Selected category is invalid',
-            'image.required' => 'Product image is required',
-            'image.image' => 'File must be an image',
-            'image.mimes' => 'Image must be jpeg, png, or jpg format',
-            'image.max' => 'Image size cannot exceed 2MB'
+            'id_category.exists' => 'Selected category is invalid'
         ]);
 
         try {
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('images/products'), $imageName);
-                $validated['image_url'] = 'images/products/' . $imageName;
-            }
-
             Product::create($validated);
 
             return redirect()->route('admin.products')

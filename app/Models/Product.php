@@ -17,7 +17,12 @@ class Product extends Model
         'description',
         'price',
         'stock',
-        'image_url',
-        'id_category'
+        'url_image',
+        'id_category',
+        'deleted_at'
     ];
+
+    public function Category(){
+        return $this->hasOne(Category::class, 'id', 'id_category');
+    }
 }

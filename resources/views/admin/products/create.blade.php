@@ -73,10 +73,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="image" class="form-label">Product Image</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror"
-                                   id="image" name="image" accept="image/*" required>
-                            @error('image')
+                            <label for="url_image" class="form-label">Product Image URL</label>
+                            <input type="textarea" class="form-control @error('url_image') is-invalid @enderror"
+                                   id="url_image" name="url_image" value="{{ old('url_image') }}"
+                                   placeholder="https://example.com/image.jpg" required>
+                            <div class="form-text">Enter the URL of the product image</div>
+                            @error('url_image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

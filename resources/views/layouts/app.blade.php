@@ -288,6 +288,7 @@
                                 <li><a class="dropdown-item" href="#">Profile</a></li>
                                 @if(Auth::user()->role === 'Admin')
                                     <li><a class="dropdown-item" href="{{ route('admin.products') }}">Manage Products</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('admin.categories') }}">Add Category</a></li>
                                 @endif
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
