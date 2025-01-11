@@ -112,12 +112,22 @@ class ProductController extends Controller
 
 
     // Customer: Menampilkan semua produk untuk customer
-    public function indexCustomer()
+    public function indexCustomer(Request $request)
     {
-        $products = Product::join('category', 'product.id_category', '=', 'category.id')
-            ->select('product.*', 'category.name as category_name')
-            ->get();
-        return view('customer.products.index', compact('products'));
+        $query = Product::query();
+
+        if ($request->filled('category')) {
+            $query->where('id_category', $request->category);
+        }
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $products = $query->get();
+        $categories = Category::all();
+
+        return view('customer.products.index', compact('products', 'categories'));
     }
 
     // Customer: Menampilkan detail produk untuk customer

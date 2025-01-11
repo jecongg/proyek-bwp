@@ -67,7 +67,7 @@ Route::group(['middleware' => ['auth', 'role:Customer']], function () {
     // Customer Dashboard
     Route::get('/customer/dashboard', function() {
         return view('customer.dashboard');
-    });
+    })->name('customer.dashboard');
 
     // Product Routes (Customer)
     Route::get('/customer/products', [ProductController::class, 'indexCustomer'])->name('customer.products');
@@ -94,6 +94,7 @@ Route::group(['middleware' => ['auth', 'role:Customer']], function () {
     // Order Routes
     Route::get('/customer/orders', [OrderController::class, 'index'])->name('customer.orders');
     Route::get('/customer/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
+
 });
 
 

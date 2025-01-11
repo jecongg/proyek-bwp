@@ -310,6 +310,9 @@
 
                         @if(Auth::user()->role === 'Customer')
                             <li class="nav-item">
+                                <a class="nav-link {{ Request::is('customer/dashboard') ? 'active' : '' }}" href="{{ route('customer.dashboard') }}">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ Request::is('customer/products') ? 'active' : '' }}" href="{{ route('customer.products') }}">Products</a>
                             </li>
                             <li class="nav-item">

@@ -1,67 +1,60 @@
-<?php
-
+<?php       
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
+use App\Models\Wishlist;
+use Auth;
 
 class WishlistController extends Controller
 {
-    // Menampilkan semua item di wishlist
     public function index()
     {
-        // Mengambil wishlist dari session
-        $wishlist = Session::get('wishlist', []);  // Defaultnya kosong jika belum ada
-        return view('customer.wishlist.index', compact('wishlist'));
+        $wishlists = Wishlist::where('user_id', Auth::id())->get();
+        return view('customer.wishlist.index', compact('wishlists'));
     }
 
-    // Menambahkan item ke wishlist
     public function add(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-        ]);
+        try {
+            // Validasi input produk_id
+            $validated = $request->validate([
+                'product_id' => 'required|exists:products,id',
+            ]);
 
-        // Mengambil wishlist dari session
-        $wishlist = Session::get('wishlist', []);
+            // Cek apakah produk sudah ada di wishlist
+            $existingWishlist = Wishlist::where('user_id', Auth::id())
+                ->where('product_id', $validated['product_id'])
+                ->first();
 
-        // Cek apakah produk sudah ada di wishlist
-        if (!isset($wishlist[$validated['product_id']])) {
-            // Jika belum ada, tambahkan produk ke wishlist
-            $wishlist[$validated['product_id']] = [
+            if ($existingWishlist) {
+                // Jika produk sudah ada di wishlist, tampilkan pesan
+                return redirect()->back()->with('error', 'Product is already in your wishlist!');
+            }
+
+            // Menambahkan produk ke wishlist
+            Wishlist::create([
+                'user_id' => Auth::id(),
                 'product_id' => $validated['product_id'],
-            ];
+            ]);
 
-            // Menyimpan wishlist yang telah diperbarui ke session
-            Session::put('wishlist', $wishlist);
-
-            return redirect()->route('customer.wishlist')->with('success', 'Item added to wishlist');
+            // Redirect dengan pesan sukses
+            return redirect()->back()->with('success', 'Product added to wishlist successfully!');
+        } catch (\Exception $e) {
+            // Tangani error jika terjadi exception
+            return back()->withInput()->with('error', 'Failed to add product to wishlist. Please try again.');
         }
-
-        return redirect()->route('customer.wishlist')->with('info', 'Item is already in your wishlist');
     }
 
-    // Menghapus item dari wishlist
     public function remove(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
         ]);
 
-        // Mengambil wishlist dari session
-        $wishlist = Session::get('wishlist', []);
+        Wishlist::where('user_id', Auth::id())
+            ->where('product_id', $request->product_id)
+            ->delete();
 
-        // Cek apakah produk ada di wishlist
-        if (isset($wishlist[$validated['product_id']])) {
-            // Menghapus produk dari wishlist
-            unset($wishlist[$validated['product_id']]);
-        }
-
-        // Menyimpan wishlist yang telah diperbarui ke session
-        Session::put('wishlist', $wishlist);
-
-        return redirect()->route('customer.wishlist')->with('success', 'Item removed from wishlist');
+        return redirect()->back()->with('status', 'Product removed from wishlist!');
     }
 }

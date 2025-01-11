@@ -27,4 +27,9 @@ class Product extends Model
     public function Category(){
         return $this->hasOne(Category::class, 'id', 'id_category');
     }
+
+    public function wishlists()
+    {
+        return $this->hasMany(Wishlist::class);
+    }
 }
