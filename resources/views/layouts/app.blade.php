@@ -246,6 +246,13 @@
             border: none;
             cursor: pointer;
         }
+
+        .profile-image {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-left: 10px;
+        }
     </style>
 </head>
 <body>
@@ -299,9 +306,6 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('admin/profile') ? 'active' : '' }}" href="{{ route('admin.profile') }}">Profile</a>
-                            </li>
                         @endif
 
                         @if(Auth::user()->role === 'Customer')
@@ -317,16 +321,23 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('customer/cart') ? 'active' : '' }}" href="{{ route('customer.cart') }}">Cart</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/profile') ? 'active' : '' }}" href="{{ route('customer.profile') }}">Profile</a>
-                            </li>
                         @endif
 
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="user-name">{{ Auth::user()->name }}</span>
+                                @if(Auth::user()->url_image)
+                                    <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                                @else
+                                    <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
+                                @endif
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <form method="GET" action="{{ Auth::user()->role === 'Admin' ? route('admin.profile.edit') : route('customer.profile.edit') }}">
+                                        <button type="submit" class="dropdown-item">Profile</button>
+                                    </form>
+                                </li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf

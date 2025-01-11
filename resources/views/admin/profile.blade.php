@@ -8,7 +8,11 @@
         <div class="col-md-4">
             <div class="card">
                 <div class="card-body text-center">
-                    <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Profile Picture">
+                    @if(Auth::user()->url_image)
+                        <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                    @else
+                        <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
+                    @endif
                     <h5 class="card-title">{{ $user->name }}</h5>
                     <p class="card-text">{{ $user->email }}</p>
                 </div>
@@ -18,22 +22,36 @@
             <div class="card">
                 <div class="card-header">Profile Information</div>
                 <div class="card-body">
-                    <form>
+                    <form action="{{ route('admin.profile.update') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        @method('PUT')
                         <div class="form-group">
                             <label for="name">Name</label>
-                            <input type="text" class="form-control" id="name" value="{{ $user->name }}">
+                            <input type="text" class="form-control" id="name" name="name" value="{{ $user->name }}">
                         </div>
                         <div class="form-group">
                             <label for="email">Email</label>
-                            <input type="email" class="form-control" id="email" value="{{ $user->email }}">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ $user->email }}">
                         </div>
                         <div class="form-group">
                             <label for="phone">Phone</label>
-                            <input type="text" class="form-control" id="phone" value="{{ $user->phone }}">
+                            <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
                         </div>
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password"  value="{{ $user->password }}>
+                            <label for="password">Current Password</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Enter your current password">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">New Password</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter a new password">
+                        </div>
+                        <div class="form-group">
+                            <label for="password_confirmation">Confirm New Password</label>
+                            <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your new password">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile_image">Profile Image</label>
+                            <input type="file" class="form-control" id="profile_image" name="profile_image">
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Update Profile</button>
                     </form>
