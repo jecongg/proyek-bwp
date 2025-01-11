@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CheckOutController;
+use App\Http\Controllers\CustomerController;
 
 Route::get('/', [CatalogController::class, 'index'])->name('home');
 Route::get('/catalog', [CatalogController::class, 'catalog'])->name('catalog');
@@ -35,6 +36,9 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::get('/admin/products', [ProductController::class, 'indexAdmin'])->name('admin.products');
     Route::get('/admin/products/create', [ProductController::class, 'create'])->name('admin.products.create');
     Route::post('/admin/products', [ProductController::class, 'store'])->name('admin.products.store');
+    Route::get('/admin/products/{id}/edit', [ProductController::class, 'editProduct'])->name('admin.products.edit');
+    Route::put('/admin/products/{id}', [ProductController::class, 'updateProduct'])->name('admin.products.update');
+    Route::delete('/admin/products/{id}', [ProductController::class, 'deleteProduct'])->name('admin.products.delete');
     Route::get('/admin/categories', [CategoryController::class, 'create'])->name('admin.categories');
     Route::post('/admin/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
     Route::get('/admin/profile', [AdminController::class, 'profile'])->name('admin.profile');

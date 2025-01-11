@@ -34,16 +34,22 @@
                         @forelse($products as $product)
                             <tr>
                                 <td>
-                                    <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                    <img src="{{ asset($product->url_image) }}" alt="{{ $product->name }}"
                                          class="product-thumbnail">
                                 </td>
                                 <td>{{ $product->name }}</td>
-                                <td>{{ $product->category }}</td>
+                                <td>{{ $product->category->name }}</td>
                                 <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                                 <td>{{ $product->stock }}</td>
                                 <td>
                                     <div class="btn-group">
-                                        <a href="#" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                        <form id="delete-form-{{ $product->id }}"
+                                              action="{{ route('admin.products.delete', $product->id) }}"
+                                              method="POST" style="display: none;">
+                                            @csrf
+                                            @method('DELETE')
+                                        </form>
                                         <button type="button" class="btn btn-sm btn-outline-danger"
                                                 onclick="deleteProduct({{ $product->id }})">Delete</button>
                                     </div>
@@ -78,4 +84,12 @@
         padding: 0.25rem 0.5rem;
     }
 </style>
+
+<script>
+    function deleteProduct(productId) {
+        if (confirm('Are you sure you want to delete this product?')) {
+            document.getElementById('delete-form-' + productId).submit();
+        }
+    }
+</script>
 @endsection

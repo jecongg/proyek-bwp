@@ -3,65 +3,83 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Support\Facades\Session;
 
-class WishlistController extends Controller
+class CheckoutController extends Controller
 {
-    // Menampilkan semua item di wishlist
+    // Menampilkan halaman checkout dengan daftar produk yang ada di keranjang belanja
     public function index()
     {
-        // Mengambil wishlist dari session
-        $wishlist = Session::get('wishlist', []);  // Defaultnya kosong jika belum ada
-        return view('customer.wishlist.index', compact('wishlist'));
-    }
+        // Mendapatkan data keranjang belanja dari session
+        $cart = Session::get('cart', []);
+        $total = 0;
 
-    // Menambahkan item ke wishlist
-    public function add(Request $request)
-    {
-        // Validasi input
-        $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-        ]);
-
-        // Mengambil wishlist dari session
-        $wishlist = Session::get('wishlist', []);
-
-        // Cek apakah produk sudah ada di wishlist
-        if (!isset($wishlist[$validated['product_id']])) {
-            // Jika belum ada, tambahkan produk ke wishlist
-            $wishlist[$validated['product_id']] = [
-                'product_id' => $validated['product_id'],
-            ];
-
-            // Menyimpan wishlist yang telah diperbarui ke session
-            Session::put('wishlist', $wishlist);
-
-            return redirect()->route('customer.wishlist')->with('success', 'Item added to wishlist');
+        // Menghitung total harga dari semua produk dalam keranjang
+        foreach ($cart as $product) {
+            $total += $product['price'] * $product['quantity'];
         }
 
-        return redirect()->route('customer.wishlist')->with('info', 'Item is already in your wishlist');
+        return view('customer.checkout.index', compact('cart', 'total'));
     }
 
-    // Menghapus item dari wishlist
-    public function remove(Request $request)
+    // Menyimpan data checkout (order) dan mengosongkan keranjang setelah checkout
+    public function store(Request $request)
     {
-        // Validasi input
+        // Validasi input dari form checkout
         $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
+            'address' => 'required|string|max:255',
+            'payment_method' => 'required|string',
         ]);
 
-        // Mengambil wishlist dari session
-        $wishlist = Session::get('wishlist', []);
+        // Mengambil data keranjang belanja dari session
+        $cart = Session::get('cart', []);
 
-        // Cek apakah produk ada di wishlist
-        if (isset($wishlist[$validated['product_id']])) {
-            // Menghapus produk dari wishlist
-            unset($wishlist[$validated['product_id']]);
+        // Jika keranjang kosong, kembalikan dengan pesan error
+        if (empty($cart)) {
+            return redirect()->route('customer.cart')->with('error', 'Your cart is empty. Please add items to your cart.');
         }
 
-        // Menyimpan wishlist yang telah diperbarui ke session
-        Session::put('wishlist', $wishlist);
+        try {
+            // Menyimpan data order ke tabel orders
+            $order = Order::create([
+                'user_id' => auth()->user()->id,
+                'address' => $validated['address'],
+                'payment_method' => $validated['payment_method'],
+                'status' => 'pending', // status awal adalah pending
+                'total_price' => 0, // Total harga akan dihitung nanti
+            ]);
 
-        return redirect()->route('customer.wishlist')->with('success', 'Item removed from wishlist');
+            // Menambahkan detail order (produk yang dipesan)
+            $total = 0;
+            foreach ($cart as $product) {
+                // Mengurangi stok produk di database
+                $productModel = Product::find($product['product_id']);
+                $productModel->stock -= $product['quantity'];
+                $productModel->save();
+
+                // Menambahkan item ke tabel order_details
+                $order->details()->create([
+                    'product_id' => $product['product_id'],
+                    'quantity' => $product['quantity'],
+                    'price' => $product['price'],
+                ]);
+
+                // Menghitung total harga
+                $total += $product['price'] * $product['quantity'];
+            }
+
+            // Update total price di tabel orders
+            $order->total_price = $total;
+            $order->save();
+
+            // Mengosongkan keranjang setelah checkout
+            Session::forget('cart');
+
+            return redirect()->route('customer.orders')->with('success', 'Your order has been placed successfully.');
+        } catch (\Exception $e) {
+            return back()->withInput()->with('error', 'An error occurred while placing the order. Please try again.');
+        }
     }
 }

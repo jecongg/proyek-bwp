@@ -33,7 +33,7 @@
                         </div>
                         <div class="form-group">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password"  value="{{ $user->password }}>
+                            <input type="password" class="form-control" id="password">
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Update Profile</button>
                     </form>
@@ -43,3 +43,4 @@
     </div>
 </div>
 @endsection
+

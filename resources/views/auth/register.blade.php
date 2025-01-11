@@ -6,7 +6,7 @@
         <div class="col-md-8">
             <div class="auth-card">
                 <h2 class="text-center mb-4">Register</h2>
-                <form method="POST" action="{{ route('register') }}">
+                <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row">
                         <div class="col-md-12 mb-4">
@@ -55,6 +55,13 @@
                                 <option value="Customer" {{ old('role') == 'Customer' ? 'selected' : '' }}>Customer</option>
                             </select>
                             @error('role')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                        <div class="col-md-12 mb-4">
+                            <label for="image" class="form-label">Profile Image</label>
+                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
+                            @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

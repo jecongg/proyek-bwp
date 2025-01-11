@@ -48,7 +48,6 @@ class AuthController extends Controller
     // Proses register
     public function register(Request $request)
     {
-        // Validasi input
         $validated = $request->validate([
             'name' => [
                 'required',
@@ -77,6 +76,11 @@ class AuthController extends Controller
                 'required',
                 'string',
                 'in:Admin,Customer'
+            ],
+            'image' => [
+                'nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif'
             ]
         ], [
             'name.required' => 'Name is required',
@@ -90,7 +94,9 @@ class AuthController extends Controller
             'password.min' => 'Password must be at least 5 characters',
             'password.confirmed' => 'Password confirmation does not match',
             'role.required' => 'Please select a role',
-            'role.in' => 'Invalid role selected'
+            'role.in' => 'Invalid role selected',
+            'image.image' => 'The file must be an image',
+            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif'
         ]);
 
         try {
@@ -100,7 +106,8 @@ class AuthController extends Controller
                 'email' => $validated['email'],
                 'phone' => $validated['phone'],
                 'password' => Hash::make($validated['password']),
-                'role' => $validated['role']
+                'role' => $validated['role'],
+                'url_image' => $request->hasFile('image') ? $request->file('image')->store('profile_images', 'public') : null
             ]);
 
             // Login user setelah register

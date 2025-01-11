@@ -86,7 +86,7 @@
         }
 
         .footer-copyright {
-            color: var(--light);
+            color: var (--light);
             opacity: 0.7;
             font-size: 0.9rem;
         }
@@ -271,13 +271,14 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto align-items-center">
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Request::is('catalog') ? 'active' : '' }}" href="{{ route('catalog') }}">Catalog</a>
-                    </li>
-
+                    @guest
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('/') ? 'active' : '' }}" href="{{ route('home') }}">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ Request::is('catalog') ? 'active' : '' }}" href="{{ route('catalog') }}">Catalog</a>
+                        </li>
+                    @endguest
                     @auth
                         @if(Auth::user()->role === 'Admin')
                             <li class="nav-item">
@@ -298,6 +299,9 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/profile') ? 'active' : '' }}" href="{{ route('admin.profile') }}">Profile</a>
+                            </li>
                         @endif
 
                         @if(Auth::user()->role === 'Customer')
@@ -312,6 +316,9 @@
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('customer/cart') ? 'active' : '' }}" href="{{ route('customer.cart') }}">Cart</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('customer/profile') ? 'active' : '' }}" href="{{ route('customer.profile') }}">Profile</a>
                             </li>
                         @endif
 
