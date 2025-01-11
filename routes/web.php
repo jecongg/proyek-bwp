@@ -45,8 +45,11 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::delete('/admin/products/{id}', [ProductController::class, 'deleteProduct'])->name('admin.products.delete');
 
     // Category Routes
-    Route::get('/admin/categories', [CategoryController::class, 'create'])->name('admin.categories');
+    Route::get('/admin/categories', [CategoryController::class, 'index'])->name('admin.categories');
+    Route::get('/admin/categories/create', [CategoryController::class, 'create'])->name('admin.categories.create');
     Route::post('/admin/categories', [CategoryController::class, 'store'])->name('admin.categories.store');
+    Route::get('/admin/categories/{id}/edit', [CategoryController::class, 'editCategory'])->name('admin.categories.edit');
+    Route::put('/admin/categories/{id}', [CategoryController::class, 'updateCategory'])->name('admin.categories.update');
 
     // Profile Routes (Admin)
     Route::get('/admin/profile', [ProfileController::class, 'editAdmin'])->name('admin.profile.edit');
@@ -56,6 +59,7 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
+    Route::post('/admin/users/toggle-status/{id}', [AdminController::class, 'toggleStatus'])->name('admin.users.toggleStatus');
 
 });
 

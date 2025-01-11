@@ -310,13 +310,13 @@
 
                         @if(Auth::user()->role === 'Customer')
                             <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/orders') ? 'active' : '' }}" href="{{ route('customer.orders') }}">My Orders</a>
+                                <a class="nav-link {{ Request::is('customer/products') ? 'active' : '' }}" href="{{ route('customer.products') }}">Products</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('customer/wishlist') ? 'active' : '' }}" href="{{ route('customer.wishlist') }}">Wishlist</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/products') ? 'active' : '' }}" href="{{ route('customer.products') }}">Products</a>
+                                <a class="nav-link {{ Request::is('customer/orders') ? 'active' : '' }}" href="{{ route('customer.orders') }}">My Orders</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('customer/cart') ? 'active' : '' }}" href="{{ route('customer.cart') }}">Cart</a>

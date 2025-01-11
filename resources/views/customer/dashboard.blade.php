@@ -67,7 +67,7 @@
             <a href="{{ route('customer.orders') }}" class="btn btn-primary w-100 mb-3">View All Orders</a>
         </div>
         <div class="col-md-6">
-            <a href="{{ route('customer.profile') }}" class="btn btn-outline-primary w-100 mb-3">Edit Profile</a>
+            <a href="{{ route('customer.profile.edit') }}" class="btn btn-outline-primary w-100 mb-3">Edit Profile</a>
         </div>
     </div>
 

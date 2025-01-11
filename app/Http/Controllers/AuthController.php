@@ -27,7 +27,15 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
 
-            // Redirect berdasarkan role
+            // Check if the user is active
+            if (Auth::user()->status !== 'active') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your account is not active.',
+                ])->onlyInput('email');
+            }
+
+            // Redirect based on role
             if (Auth::user()->role === 'Admin') {
                 return redirect()->intended('/admin/dashboard');
             }

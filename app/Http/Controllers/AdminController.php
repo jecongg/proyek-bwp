@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AdminController extends Controller
 {
@@ -29,8 +30,17 @@ class AdminController extends Controller
     // Manage Users
     public function users()
     {
-        // Logika untuk mengelola pengguna
-        return view('admin.users'); // Buat file view di resources/views/admin/users.blade.php
+        $customers = User::where('role', 'Customer')->get();
+        return view('admin.users', compact('customers'));
+    }
+
+    public function toggleStatus($id)
+    {
+        $user = User::find($id);
+        $user->status = $user->status === 'active' ? 'not active' : 'active';
+        $user->save();
+
+        return redirect()->back()->with('status', 'User status updated successfully!');
     }
 
     public function updateProfile(Request $request)
