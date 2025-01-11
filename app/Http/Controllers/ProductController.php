@@ -8,7 +8,7 @@ use App\Models\Category;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function indexAdmin()
     {
         $products = Product::join('category', 'product.id_category', '=', 'category.id')
             ->select('product.*', 'category.name as category_name')
@@ -16,12 +16,14 @@ class ProductController extends Controller
         return view('admin.products.index', compact('products'));
     }
 
+    // Admin: Menambahkan produk
     public function create()
     {
         $categories = Category::all();
         return view('admin.products.create', compact('categories'));
     }
 
+    // Admin: Menyimpan produk
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -51,5 +53,22 @@ class ProductController extends Controller
             return back()->withInput()
                 ->with('error', 'Failed to add product. Please try again.');
         }
+    }
+
+    // Customer: Menampilkan semua produk untuk customer
+    public function indexCustomer()
+    {
+        $products = Product::join('category', 'product.id_category', '=', 'category.id')
+            ->select('product.*', 'category.name as category_name')
+            ->get();
+        return view('customer.products.index', compact('products'));
+    }
+
+    // Customer: Menampilkan detail produk untuk customer
+    public function show($id)
+    {
+        $product = Product::findOrFail($id);
+        $category = Category::findOrFail($product->id_category);
+        return view('customer.products.show', compact('product', 'category'));
     }
 }

@@ -31,7 +31,7 @@ class AuthController extends Controller
             if (Auth::user()->role === 'Admin') {
                 return redirect()->intended('/admin/dashboard');
             }
-            return redirect()->intended('/');
+            return redirect()->intended('/customer/dashboard');
         }
 
         return back()->withErrors([
@@ -102,7 +102,7 @@ class AuthController extends Controller
                 'password' => Hash::make($validated['password']),
                 'role' => $validated['role']
             ]);
-            
+
             // Login user setelah register
             Auth::login($user);
 
@@ -111,7 +111,7 @@ class AuthController extends Controller
                 return redirect()->intended('/admin/dashboard')->with('success', 'Registration successful! Welcome to admin dashboard.');
             }
 
-            return redirect()->intended('/')->with('success', 'Registration successful! Welcome to Pool Essential.');
+            return redirect()->intended('/customer/dashboard')->with('success', 'Registration successful! Welcome to Pool Essential.');
 
         } catch (\Exception $e) {
             return back()->withInput()

@@ -279,18 +279,47 @@
                     </li>
 
                     @auth
+                        @if(Auth::user()->role === 'Admin')
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/products') ? 'active' : '' }}" href="{{ route('admin.products') }}">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/categories') ? 'active' : '' }}" href="{{ route('admin.categories') }}">Category</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/orders') ? 'active' : '' }}" href="{{ route('admin.orders') }}">Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/reports') ? 'active' : '' }}" href="{{ route('admin.reports') }}">Reports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
+                            </li>
+                        @endif
+
+                        @if(Auth::user()->role === 'Customer')
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('customer/orders') ? 'active' : '' }}" href="{{ route('customer.orders') }}">My Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('customer/wishlist') ? 'active' : '' }}" href="{{ route('customer.wishlist') }}">Wishlist</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('customer/products') ? 'active' : '' }}" href="{{ route('customer.products') }}">Products</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Request::is('customer/cart') ? 'active' : '' }}" href="{{ route('customer.cart') }}">Cart</a>
+                            </li>
+                        @endif
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 <span class="user-name">{{ Auth::user()->name }}</span>
-                                <span class="user-role">({{ Auth::user()->role }})</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#">Profile</a></li>
-                                @if(Auth::user()->role === 'Admin')
-                                    <li><a class="dropdown-item" href="{{ route('admin.products') }}">Manage Products</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('admin.categories') }}">Add Category</a></li>
-                                @endif
-                                <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf

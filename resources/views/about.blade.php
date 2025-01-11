@@ -28,7 +28,7 @@
                     <li><strong>Phone:</strong> (021) 123-4567</li>
                     <li><strong>Address:</strong> Jakarta, Indonesia</li>
                 </ul>
-                <p>We are available Monday to Friday from 9 AM to 6 PM. You can also follow us on our social media channels for the latest updates and promotions:</p>
+                <p>We are available Monday to Friday from 9 AM to 9 PM. You can also follow us on our social media channels for the latest updates and promotions:</p>
                 <ul class="list-unstyled">
                     <li><strong>Facebook:</strong> <a href="https://www.facebook.com">facebook.com/poolessential</a></li>
                     <li><strong>Instagram:</strong> <a href="https://www.instagram.com">@poolessential</a></li>
