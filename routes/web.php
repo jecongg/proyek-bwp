@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 
 Route::get('/', [CatalogController::class, 'index'])->name('home');
 Route::get('/catalog', [CatalogController::class, 'catalog'])->name('catalog');
+Route::get('/about', [CatalogController::class, 'about'])->name('about');
 
 // Authentication Routes
 Route::middleware('guest')->group(function () {

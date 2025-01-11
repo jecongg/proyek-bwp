@@ -325,8 +325,7 @@
                     <ul class="footer-links">
                         <li><a href="{{ route('home') }}">Home</a></li>
                         <li><a href="{{ route('catalog') }}">Catalog</a></li>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="{{ route('about') }}">About Us</a></li>
                     </ul>
                 </div>
                 <div class="col-md-4">

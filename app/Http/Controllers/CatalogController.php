@@ -15,4 +15,9 @@ class CatalogController extends Controller
     {
         return view('catalog');
     }
+
+    public function about()
+    {
+        return view('about');
+    }
 }
