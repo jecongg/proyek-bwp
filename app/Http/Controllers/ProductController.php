@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Wishlist;
 
 class ProductController extends Controller
 {
@@ -134,7 +135,12 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::findOrFail($id);
-        $category = Category::findOrFail($product->id_category);
-        return view('customer.products.show', compact('product', 'category'));
+
+        // Check if product is in user's wishlist
+        $inWishlist = Wishlist::where('user_id', auth()->id())
+                             ->where('product_id', $id)
+                             ->exists();
+
+        return view('customer.products.show', compact('product', 'inWishlist'));
     }
 }

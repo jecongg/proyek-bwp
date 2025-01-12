@@ -2,66 +2,69 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
+use App\Models\DCart;
+use App\Models\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
 {
-    // Menampilkan semua item di cart
     public function index()
     {
-        $cart = Session::get('cart', []);  // Mengambil cart dari session (default empty array)
+        $cart = Cart::with('details.product')->firstOrCreate(['user_id' => auth()->id()]);
+        if (!$cart->details) {
+            $cart->setRelation('details', collect([]));
+        }
         return view('customer.cart.index', compact('cart'));
     }
 
-    // Menambahkan item ke cart
-    public function add(Request $request)
+    public function addToCart(Request $request)
     {
-        // Validasi input
-        $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+        $request->validate([
+            'product_id' => 'required|exists:product,id',
+            'quantity' => 'required|integer|min:1'
         ]);
 
-        // Mengambil cart dari session
-        $cart = Session::get('cart', []);
+        $cart = Cart::firstOrCreate(['user_id' => auth()->id()]);
 
-        // Cek apakah produk sudah ada di cart
-        if (isset($cart[$validated['product_id']])) {
-            // Jika sudah ada, tambahkan kuantitas
-            $cart[$validated['product_id']]['quantity'] += $validated['quantity'];
+        $detail = $cart->details()->where('product_id', $request->product_id)->first();
+
+        if ($detail) {
+            $detail->update([
+                'quantity' => $detail->quantity + $request->quantity
+            ]);
         } else {
-            // Jika belum ada, tambahkan produk baru ke cart
-            $cart[$validated['product_id']] = [
-                'quantity' => $validated['quantity'],
-            ];
+            $cart->details()->create([
+                'product_id' => $request->product_id,
+                'quantity' => $request->quantity
+            ]);
         }
 
-        // Menyimpan cart yang telah diperbarui ke session
-        Session::put('cart', $cart);
-
-        return redirect()->route('customer.cart')->with('success', 'Item added to cart');
+        return redirect()->back()->with('success', 'Product added to cart successfully!');
     }
 
-    // Menghapus item dari cart
-    public function remove(Request $request)
+    public function updateQuantity(Request $request, DCart $detail)
     {
-        $validated = $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
+        $request->validate([
+            'quantity' => 'required|integer|min:1'
         ]);
 
-        // Mengambil cart dari session
-        $cart = Session::get('cart', []);
+        $detail->update(['quantity' => $request->quantity]);
+        return redirect()->back()->with('success', 'Cart updated successfully!');
+    }
 
-        // Cek apakah produk ada di cart
-        if (isset($cart[$validated['product_id']])) {
-            // Menghapus produk dari cart
-            unset($cart[$validated['product_id']]);
+    public function removeItem(DCart $detail)
+    {
+        $detail->delete();
+        return redirect()->back()->with('success', 'Item removed from cart!');
+    }
+
+    public function clear()
+    {
+        $cart = Cart::where('user_id', auth()->id())->first();
+        if ($cart) {
+            $cart->details()->delete();
         }
-
-        // Menyimpan cart yang telah diperbarui ke session
-        Session::put('cart', $cart);
-
-        return redirect()->route('customer.cart')->with('success', 'Item removed from cart');
+        return redirect()->back()->with('success', 'Cart cleared successfully!');
     }
 }

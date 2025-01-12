@@ -289,66 +289,70 @@
                     @auth
                         @if(Auth::user()->role === 'Admin')
                             <li class="nav-item">
-                                <a class="nav-link {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a>
-                            </li>
-                            <li class="nav-item">
                                 <a class="nav-link {{ Request::is('admin/products') ? 'active' : '' }}" href="{{ route('admin.products') }}">Products</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('admin/categories') ? 'active' : '' }}" href="{{ route('admin.categories') }}">Category</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                    @if(Auth::user()->url_image)
+                                        <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                                    @else
+                                        <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
+                                    @endif
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <form method="GET" action="{{ route('admin.profile.edit') }}">
+                                            <button type="submit" class="dropdown-item">Profile</button>
+                                        </form>
+                                    </li>
+                                    <li><a class="dropdown-item {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('admin/categories') ? 'active' : '' }}" href="{{ route('admin.categories') }}">Categories</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('admin/orders') ? 'active' : '' }}" href="{{ route('admin.orders') }}">Orders</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('admin/reports') ? 'active' : '' }}" href="{{ route('admin.reports') }}">Reports</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('admin/orders') ? 'active' : '' }}" href="{{ route('admin.orders') }}">Orders</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('admin/reports') ? 'active' : '' }}" href="{{ route('admin.reports') }}">Reports</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a>
-                            </li>
-                        @endif
-
-                        @if(Auth::user()->role === 'Customer')
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/dashboard') ? 'active' : '' }}" href="{{ route('customer.dashboard') }}">Dashboard</a>
-                            </li>
+                        @else
                             <li class="nav-item">
                                 <a class="nav-link {{ Request::is('customer/products') ? 'active' : '' }}" href="{{ route('customer.products') }}">Products</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/wishlist') ? 'active' : '' }}" href="{{ route('customer.wishlist') }}">Wishlist</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/orders') ? 'active' : '' }}" href="{{ route('customer.orders') }}">My Orders</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ Request::is('customer/cart') ? 'active' : '' }}" href="{{ route('customer.cart') }}">Cart</a>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="user-name">{{ Auth::user()->name }}</span>
+                                    @if(Auth::user()->url_image)
+                                        <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                                    @else
+                                        <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
+                                    @endif
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                    <li>
+                                        <form method="GET" action="{{ route('customer.profile.edit') }}">
+                                            <button type="submit" class="dropdown-item">Profile</button>
+                                        </form>
+                                    </li>
+                                    <li><a class="dropdown-item {{ Request::is('customer/dashboard') ? 'active' : '' }}" href="{{ route('customer.dashboard') }}">Dashboard</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('customer/wishlist') ? 'active' : '' }}" href="{{ route('customer.wishlist') }}">Wishlist</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('customer/orders') ? 'active' : '' }}" href="{{ route('customer.orders') }}">My Orders</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('customer/cart') ? 'active' : '' }}" href="{{ route('customer.cart') }}">Cart</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
                             </li>
                         @endif
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                <span class="user-name">{{ Auth::user()->name }}</span>
-                                @if(Auth::user()->url_image)
-                                    <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
-                                @else
-                                    <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
-                                @endif
-                            </a>
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                <li>
-                                    <form method="GET" action="{{ Auth::user()->role === 'Admin' ? route('admin.profile.edit') : route('customer.profile.edit') }}">
-                                        <button type="submit" class="dropdown-item">Profile</button>
-                                    </form>
-                                </li>
-                                <li>
-                                    <form method="POST" action="{{ route('logout') }}">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">Logout</button>
-                                    </form>
-                                </li>
-                            </ul>
-                        </li>
                     @else
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('login') }}">Login</a>

@@ -75,13 +75,13 @@ Route::group(['middleware' => ['auth', 'role:Customer']], function () {
 
     // Cart Routes
     Route::get('/customer/cart', [CartController::class, 'index'])->name('customer.cart');
-    Route::post('/customer/cart/add', [CartController::class, 'add'])->name('customer.cart.add');
+    Route::post('/customer/cart/add', [CartController::class, 'addToCart'])->name('customer.cart.add');
     Route::post('/customer/cart/remove', [CartController::class, 'remove'])->name('customer.cart.remove');
 
     // Wishlist Routes
-    Route::get('/customer/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
-    Route::post('/customer/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
-    Route::post('/customer/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
+    Route::get('customer/wishlist', [WishlistController::class, 'index'])->name('customer.wishlist');
+    Route::post('customer/wishlist/add', [WishlistController::class, 'add'])->name('customer.wishlist.add');
+    Route::post('customer/wishlist/remove', [WishlistController::class, 'remove'])->name('customer.wishlist.remove');
 
     // Profile Routes (Customer)
     Route::get('/customer/profile', [ProfileController::class, 'editCustomer'])->name('customer.profile.edit');
@@ -91,11 +91,22 @@ Route::group(['middleware' => ['auth', 'role:Customer']], function () {
     Route::get('/customer/checkout', [CheckoutController::class, 'index'])->name('customer.checkout');
     Route::post('/customer/checkout', [CheckoutController::class, 'store'])->name('customer.checkout.store');
 
-    // Order Routes
-    Route::get('/customer/orders', [OrderController::class, 'index'])->name('customer.orders');
-    Route::get('/customer/orders/{id}', [OrderController::class, 'show'])->name('customer.orders.show');
+    Route::prefix('cart')->name('cart.')->group(function () {
+        Route::get('/', [CartController::class, 'index'])->name('index');
+        Route::post('/add', [CartController::class, 'addToCart'])->name('add');
+        Route::patch('/update/{detail}', [CartController::class, 'updateQuantity'])->name('update-quantity');
+        Route::delete('/remove/{detail}', [CartController::class, 'removeItem'])->name('remove-item');
+        Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+    });
 
+    Route::get('customer/orders', [OrderController::class, 'index'])->name('customer.orders');
+    Route::get('customer/orders/show/{order}', [OrderController::class, 'show'])->name('customer.orders.show');
+    Route::post('customer/orders/cancel/{order}', [OrderController::class, 'cancel'])->name('customer.orders.cancel');
+
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
 });
+
 
 
 

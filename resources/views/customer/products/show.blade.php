@@ -22,25 +22,44 @@
                 </p>
                 <h4 class="product-price mb-4">Price: <strong>Rp {{ number_format($product->price, 0, ',', '.') }}</strong></h4>
 
-                <div class="d-flex align-items-center">
-                    <a href="{{ route('customer.cart.add', $product->id) }}" class="btn btn-primary btn-lg me-3">
-                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                    </a>
-                    <a href="#"
-                    onclick="event.preventDefault(); document.getElementById('add-to-wishlist-form').submit();"
-                    class="btn btn-outline-secondary btn-lg">
-                        <i class="fas fa-heart"></i> Add to Wishlist
-                    </a>
-                    <form id="add-to-wishlist-form" action="{{ route('customer.wishlist.add') }}" method="POST" style="display: none;">
+                <!-- Add to Cart Form with Quantity -->
+                <form action="{{ route('customer.cart.add') }}" method="POST" class="mb-3">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <div class="d-flex gap-3 align-items-center">
+                        <div class="quantity-wrapper">
+                            <label for="quantity" class="form-label">Quantity:</label>
+                            <input type="number" name="quantity" id="quantity" class="form-control"
+                                   value="1" min="1" style="width: 100px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary flex-grow-1">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Wishlist button -->
+                @if($inWishlist)
+                    <form action="{{ route('customer.wishlist.remove') }}" method="POST">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" class="btn btn-outline-danger w-100">
+                            <i class="fas fa-heart-broken me-2"></i>Remove from Wishlist
+                        </button>
                     </form>
-                </div>
+                @else
+                    <form action="{{ route('customer.wishlist.add') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" class="btn btn-outline-secondary w-100">
+                            <i class="fas fa-heart me-2"></i>Add to Wishlist
+                        </button>
+                    </form>
+                @endif
             </div>
         </div>
     </div>
 </div>
-@endsection
 
 <style>
     .product-image-wrapper {
@@ -51,24 +70,24 @@
     }
 
     .product-title {
-        font-size: 2.5rem; /* Memperbesar ukuran nama produk */
+        font-size: 2.5rem;
         font-weight: bold;
         color: #333;
     }
 
     .product-category {
-        font-size: 1.25rem; /* Memperbesar ukuran teks kategori */
+        font-size: 1.25rem;
         color: #555;
     }
 
     .product-description {
-        font-size: 1.25rem; /* Memperbesar ukuran teks deskripsi */
+        font-size: 1.25rem;
         line-height: 1.8;
         color: #555;
     }
 
     .product-price {
-        font-size: 1.75rem; /* Ukuran harga tetap menonjol */
+        font-size: 1.75rem;
         font-weight: bold;
         color: #28a745;
     }
@@ -99,3 +118,4 @@
         color: #fff;
     }
 </style>
+@endsection
