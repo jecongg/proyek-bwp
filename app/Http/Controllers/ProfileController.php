@@ -49,7 +49,7 @@ class ProfileController extends Controller
         // Apply common validation for both admin and customer
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:user,email,' . $user->id,
             'phone' => 'nullable|string|max:255',
             'profile_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);

@@ -2,12 +2,99 @@
 
 @section('content')
 <div class="container my-5">
+
     <div class="row mb-4">
         <div class="col-12">
             <h2 class="text-center section-title mb-4">Customer Dashboard</h2>
         </div>
     </div>
 
+    <!-- Hero Carousel -->
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <img src="{{asset('images/carousel1.jpg')}}" class="d-block w-100" alt="Premium Cues">
+                <div class="carousel-caption">
+                    <h2>Premium Billiard Equipment</h2>
+                    <p>Discover our collection of professional-grade billiard cues and accessories</p>
+                    <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">Shop Now</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1920x600" class="d-block w-100" alt="New Collection">
+                <div class="carousel-caption">
+                    <h2>New Collection Arrival</h2>
+                    <p>Check out our latest collection of premium jump cues</p>
+                    <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">View Collection</a>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <img src="https://via.placeholder.com/1920x600" class="d-block w-100" alt="Special Offers">
+                <div class="carousel-caption">
+                    <h2>Special Offers</h2>
+                    <p>Get up to 30% off on selected items this month</p>
+                    <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">Shop Deals</a>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+        <br><br><br>
+    </div>
+
+    <!-- About Us Section -->
+    <div class="row mb-5 align-items-center">
+        <div class="col-md-6 mx-auto">
+            <h2 class="section-title">About Us</h2>
+            <p class="text-muted">Text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</p>
+            <ul class="list-unstyled">
+                <li><i class="bi bi-check-circle text-primary"></i> What is Lorem Ipsum?</li>
+                <li><i class="bi bi-check-circle text-primary"></i> Where can I get some?</li>
+            </ul>
+        </div>
+        <div class="col-md-6 mx-auto">
+            <img src="/images/aboutus.jpg" alt="About Us" class="img-fluid rounded shadow" style="width: 100%; height: 300px; object-fit: cover;">
+        </div>
+    </div>
+
+
+    <!-- Our Gallery Section -->
+    <div class="row">
+        <div class="col-12 text-center mb-4">
+            <h2 class="section-title">Our Gallery</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <img src="/images/ourgallery1.jpg" class="img-fluid rounded shadow gallery-image" alt="Gallery Image 1">
+        </div>
+        <div class="col-md-4 mb-4">
+            <img src="/images/ourgallery2.jpg" class="img-fluid rounded shadow gallery-image" alt="Gallery Image 2">
+        </div>
+        <div class="col-md-4 mb-4">
+            <img src="/images/ourgallery3.jpg" class="img-fluid rounded shadow gallery-image" alt="Gallery Image 3">
+        </div>
+    </div>
+
+    <style>
+        .gallery-image {
+            width: 100%; 
+            height: 300px; 
+            object-fit: cover;
+        }
+    </style>
+
+
+    <!-- Customer Dashboard Section -->
     <div class="row mb-4">
         <div class="col-md-4">
             <div class="card shadow-sm border-primary">
@@ -70,6 +157,5 @@
             <a href="{{ route('customer.profile.edit') }}" class="btn btn-outline-primary w-100 mb-3">Edit Profile</a>
         </div>
     </div>
-
 </div>
 @endsection
