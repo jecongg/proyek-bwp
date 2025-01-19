@@ -12,26 +12,25 @@
         <div class="carousel-item active">
             <img src="{{asset('images/carousel1.jpg')}}" class="d-block w-100" alt="Premium Cues">
             <div class="carousel-caption">
-                <h2>Premium Billiard Equipment</h2>
-                <p>Discover our collection of professional-grade billiard cues and accessories</p>
-                <!-- route e jek nang catalog -->
-                <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">Shop Now</a>
+                <h2>About Us</h2>
+                <p>Welcome to our store! We are dedicated to providing you with the best quality products and exceptional customer service</p>
+                <a href="{{ route('about') }}" class="btn btn-primary btn-lg">About Us</a>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="https://via.placeholder.com/1920x600" class="d-block w-100" alt="New Collection">
+            <img src="{{asset('images/car2.jpg')}}" class="d-block w-100" alt="New Collection">
+            <div class="carousel-caption">
+                <h2>Premium Billiard Equipments</h2>
+                <p>Discover our collection of professional-grade billiard cues and accessories</p>
+                <a href="{{ route('login') }}" class="btn btn-primary btn-lg">Shop Now</a>
+            </div>
+        </div>
+        <div class="carousel-item">
+            <img src="{{asset('images/catalog.jpg')}}" class="d-block w-100" alt="Special Offers">
             <div class="carousel-caption">
                 <h2>New Collection Arrival</h2>
-                <p>Check out our latest collection of premium jump cues</p>
-                <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">View Collection</a>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img src="https://via.placeholder.com/1920x600" class="d-block w-100" alt="Special Offers">
-            <div class="carousel-caption">
-                <h2>Special Offers</h2>
-                <p>Get up to 30% off on selected items this month</p>
-                <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">Shop Deals</a>
+                <p>Check out our latest collection of premium billiard equipments</p>
+                <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">View Catalog</a>
             </div>
         </div>
     </div>
@@ -44,43 +43,44 @@
 </div>
 
 <!-- Featured Categories -->
+<!-- Featured Categories -->
 <section class="featured-categories py-5">
     <div class="container">
         <h3 class="section-title text-center mb-4">Featured Categories</h3>
         <div class="row g-4">
             <div class="col-md-3">
                 <div class="category-box">
-                    <img src="https://via.placeholder.com/300" alt="Playing Cues" class="img-fluid">
+                    <img src="{{asset('images/cue.jpg')}}" alt="Playing Cues" class="img-fluid category-image">
                     <div class="category-content">
                         <h4>Playing Cues</h4>
-                        <a href="#" class="btn btn-outline-primary">View All</a>
+                        <a href="{{ route('catalog', ['category' => 'Play Cue']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="category-box">
-                    <img src="https://via.placeholder.com/300" alt="Jump Cues" class="img-fluid">
+                    <img src="{{asset('images/cuecase.jpg')}}" alt="Cue Cases" class="img-fluid category-image">
                     <div class="category-content">
-                        <h4>Jump Cues</h4>
-                        <a href="#" class="btn btn-outline-primary">View All</a>
+                        <h4>Cue Cases</h4>
+                        <a href="{{ route('catalog', ['category' => 'Cue Case']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="category-box">
-                    <img src="https://via.placeholder.com/300" alt="Cases" class="img-fluid">
+                    <img src="{{asset('images/gloves.jpg')}}" alt="Gloves" class="img-fluid category-image">
                     <div class="category-content">
-                        <h4>Cases</h4>
-                        <a href="#" class="btn btn-outline-primary">View All</a>
+                        <h4>Gloves</h4>
+                        <a href="{{ route('catalog', ['category' => 'Gloves']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="category-box">
-                    <img src="https://via.placeholder.com/300" alt="Accessories" class="img-fluid">
+                    <img src="{{asset('images/pooltable.jpg')}}" alt="Pool Table" class="img-fluid category-image">
                     <div class="category-content">
-                        <h4>Accessories</h4>
-                        <a href="#" class="btn btn-outline-primary">View All</a>
+                        <h4>Pool Table</h4>
+                        <a href="{{ route('catalog', ['category' => 'Pool Table']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
@@ -169,6 +169,12 @@
 
     .category-content h4 {
         margin-bottom: 1rem;
+    }
+
+    .category-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
     }
 
     /* Feature Box Styling */
