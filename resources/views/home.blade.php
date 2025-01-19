@@ -14,6 +14,7 @@
             <div class="carousel-caption">
                 <h2>Premium Billiard Equipment</h2>
                 <p>Discover our collection of professional-grade billiard cues and accessories</p>
+                <!-- route e jek nang catalog -->
                 <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">Shop Now</a>
             </div>
         </div>

@@ -4,9 +4,9 @@
 <div class="container mt-4 mb-5">
     <h2 class="section-title mb-4">Checkout</h2>
 
-    @if(session('error'))
+    @if(Session::has('error'))
         <div class="alert alert-danger">
-            {{ session('error') }}
+            {{ Session::get('error') }}
         </div>
     @endif
 

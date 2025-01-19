@@ -28,6 +28,11 @@ class CheckoutController extends Controller
                        ->where('user_id', auth()->id())
                        ->firstOrFail();
 
+            // Validasi cart
+            if (!$cart->details || $cart->details->count() == 0) {
+                throw new \Exception('Cart is empty');
+            }
+
             // Create HTrans
             $htrans = HTrans::create([
                 'user_id' => auth()->id(),
@@ -41,7 +46,7 @@ class CheckoutController extends Controller
                     'htrans_id' => $htrans->id,
                     'product_id' => $detail->product_id,
                     'quantity' => $detail->quantity,
-                    'price' => $detail->price,
+                    'price' => $detail->product->price,
                     'subtotal' => $detail->subtotal
                 ]);
             }
@@ -57,7 +62,9 @@ class CheckoutController extends Controller
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Something went wrong! Please try again.');
+            // Tampilkan pesan error yang sebenarnya untuk debugging
+            return redirect()->back()
+                            ->with('error', 'Error: ' . $e->getMessage());
         }
     }
 }

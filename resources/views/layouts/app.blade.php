@@ -254,6 +254,12 @@
             border-radius: 50%;
             margin-left: 10px;
         }
+
+        .product-image-detail{
+            width: 270px;
+            height: 270px;
+            margin: 15px;
+        }
     </style>
 </head>
 <body>

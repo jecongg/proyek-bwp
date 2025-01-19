@@ -11,7 +11,7 @@ class HTrans extends Model
 
     public function details()
     {
-        return $this->hasMany(DTrans::class, 'htrans_id');
+        return $this->hasMany(DTrans::class, 'htrans_id', 'id');
     }
 
     public function user()

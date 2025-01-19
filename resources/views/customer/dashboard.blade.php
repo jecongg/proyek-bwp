@@ -22,7 +22,7 @@
                 <div class="carousel-caption">
                     <h2>Premium Billiard Equipment</h2>
                     <p>Discover our collection of professional-grade billiard cues and accessories</p>
-                    <a href="{{ route('catalog') }}" class="btn btn-primary btn-lg">Shop Now</a>
+                    <a href="{{ route('customer.products') }}" class="btn btn-primary btn-lg">Shop Now</a>
                 </div>
             </div>
             <div class="carousel-item">

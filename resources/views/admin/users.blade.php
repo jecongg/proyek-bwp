@@ -3,9 +3,11 @@
 @section('content')
 <div class="container">
     <h1>Customers</h1>
-    @if(session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
+    @if(Session::has('status'))
+        
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ Session::get('status') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
     <table class="table">
