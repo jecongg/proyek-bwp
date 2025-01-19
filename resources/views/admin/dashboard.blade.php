@@ -11,7 +11,7 @@
         <div class="col-md-4">
             <div class="card bg-primary text-white">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Total Sales</h5>
+                    <h5 class="card-title" style="color: white">Total Sales</h5>
                     <p class="card-text fs-4">Rp {{ number_format($totalSales, 0, ',', '.') }}</p>
                 </div>
             </div>
@@ -19,7 +19,7 @@
         <div class="col-md-4">
             <div class="card bg-success text-white">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Total Products Sold</h5>
+                    <h5 class="card-title" style="color: white">Total Products Sold</h5>
                     <p class="card-text fs-4">{{ $totalProductsSold }}</p>
                 </div>
             </div>
@@ -27,7 +27,7 @@
         <div class="col-md-4">
             <div class="card bg-info text-white">
                 <div class="card-body text-center">
-                    <h5 class="card-title">Total Users Active</h5>
+                    <h5 class="card-title" style="color: white">Total Users Active</h5>
                     <p class="card-text fs-4">{{ $totalUsersActive }}</p>
                 </div>
             </div>

@@ -9,7 +9,8 @@
             <div class="card">
                 <div class="card-body text-center">
                     @if(Auth::user()->url_image)
-                        <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                        <img src="{{ asset(Auth::user()->url_image) }}" alt="Profile Image" class="profile-image" style="width: 200px; height: 200px;
+                         object-fit: cover; border-radius: 50%;">
                     @else
                         <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
                     @endif
@@ -50,8 +51,8 @@
                             <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Confirm your new password">
                         </div>
                         <div class="form-group">
-                            <label for="profile_image">Profile Image</label>
-                            <input type="file" class="form-control" id="profile_image" name="profile_image">
+                            <label for="profile_image">Profile Image in URL</label>
+                            <input type="text" class="form-control" id="profile_image" name="profile_image">
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Update Profile</button>
                     </form>
@@ -60,4 +61,6 @@
         </div>
     </div>
 </div>
+
+
 @endsection

@@ -260,6 +260,13 @@
             height: 270px;
             margin: 15px;
         }
+
+        .profile-image {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 50%;
+        }
     </style>
 </head>
 <body>
@@ -302,7 +309,7 @@
                                 <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="user-name">{{ Auth::user()->name }}</span>
                                     @if(Auth::user()->url_image)
-                                        <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                                        <img src="{{ asset(Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
                                     @else
                                         <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
                                     @endif
@@ -335,7 +342,7 @@
                                 <a class="nav-link dropdown-toggle user-info" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <span class="user-name">{{ Auth::user()->name }}</span>
                                     @if(Auth::user()->url_image)
-                                        <img src="{{ asset('storage/' . Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
+                                        <img src="{{ asset(Auth::user()->url_image) }}" alt="Profile Image" class="profile-image">
                                     @else
                                         <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
                                     @endif
