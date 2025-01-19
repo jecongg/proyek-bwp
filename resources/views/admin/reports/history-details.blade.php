@@ -20,29 +20,29 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     @endif
-    
+
     <div class="card">
         <div class="card-body">
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Order ID</div>
                 <div class="col-md-9">{{ $htrans->id }}</div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Email Pembeli</div>
                 <div class="col-md-9">{{ $htrans->user->email }}</div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Nama Pembeli</div>
                 <div class="col-md-9">{{ $htrans->user->name }}</div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Total Harga</div>
                 <div class="col-md-9">Rp {{ number_format($htrans->total_price, 0, ',', '.') }}</div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Status</div>
                 <div class="col-md-9">
@@ -51,14 +51,14 @@
                     </span>
                 </div>
             </div>
-            
+
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Tanggal Pemesanan</div>
                 <div class="col-md-9">{{ $htrans->created_at->format('d F Y H:i') }}</div>
             </div>
         </div>
     </div><br>
-    
+
     <h4 class="section-title mb-4">Barang Yang Dibeli</h4>
     @foreach($dtrans as $d)
         <div class="card m-2">

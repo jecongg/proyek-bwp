@@ -18,4 +18,9 @@ class HTrans extends Model
     {
         return $this->belongsTo(User::class, 'user_id', 'id')->where('role', 'Customer');
     }
+
+    public function dtrans()
+    {
+        return $this->hasMany(DTrans::class, 'htrans_id');
+    }
 }

@@ -323,7 +323,7 @@
                                     <li><a class="dropdown-item {{ Request::is('admin/dashboard') ? 'active' : '' }}" href="{{ route('admin.dashboard') }}">Dashboard</a></li>
                                     <li><a class="dropdown-item {{ Request::is('admin/categories') ? 'active' : '' }}" href="{{ route('admin.categories') }}">Categories</a></li>
                                     <li><a class="dropdown-item {{ Request::is('admin/orders') ? 'active' : '' }}" href="{{ route('admin.orders') }}">Orders</a></li>
-                                    <li><a class="dropdown-item {{ Request::is('admin/reports') ? 'active' : '' }}" href="{{ route('admin.reports') }}">Reports</a></li>
+                                    <li><a class="dropdown-item {{ Request::is('admin/report') ? 'active' : '' }}" href="{{ route('admin.report') }}">Reports</a></li>
                                     <li><a class="dropdown-item {{ Request::is('admin/users') ? 'active' : '' }}" href="{{ route('admin.users') }}">Users</a></li>
                                     <li><hr class="dropdown-divider"></li>
                                     <li>

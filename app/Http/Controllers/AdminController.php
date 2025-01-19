@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Exports\TransactionsExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -9,9 +11,93 @@ use App\Models\HTrans;
 use App\Models\DTrans;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+
 
 class AdminController extends Controller
 {
+
+    public function handleReport(Request $request)
+    {
+        $startDate = Carbon::parse($request->start_date)->startOfDay();
+        $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+        if ($request->input('action') == 'generate') {
+            return $this->generateReport($startDate, $endDate);
+        } elseif ($request->input('action') == 'export') {
+            return $this->exportTransactions($startDate, $endDate);
+        }
+    }
+
+    private function generateReport($startDate, $endDate)
+    {
+        $transactions = $this->getTransactions($startDate, $endDate);
+        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        return view('admin.reports', compact('htrans','transactions', 'startDate', 'endDate'));
+    }
+
+    private function exportTransactions($startDate, $endDate)
+    {
+        $transactions = $this->getTransactions($startDate, $endDate);
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Set the headers
+        $sheet->setCellValue('A1', 'Transaction ID');
+        $sheet->setCellValue('B1', 'User Name');
+        $sheet->setCellValue('C1', 'Total Price');
+        $sheet->setCellValue('D1', 'Status');
+        $sheet->setCellValue('E1', 'Created At');
+        $sheet->setCellValue('F1', 'Product Name');
+        $sheet->setCellValue('G1', 'Quantity');
+        $sheet->setCellValue('H1', 'Price');
+
+        // Fill the data
+        $row = 2;
+        foreach ($transactions as $htrans) {
+            foreach ($htrans->dtrans as $dtrans) {
+                $sheet->setCellValue('A' . $row, $htrans->id);
+                $sheet->setCellValue('B' . $row, $htrans->user->name);
+                $sheet->setCellValue('C' . $row, $htrans->total_price);
+                $sheet->setCellValue('D' . $row, $htrans->status);
+                $sheet->setCellValue('E' . $row, $htrans->created_at);
+                $sheet->setCellValue('F' . $row, $dtrans->product->name);
+                $sheet->setCellValue('G' . $row, $dtrans->quantity);
+                $sheet->setCellValue('H' . $row, $dtrans->price);
+                $row++;
+            }
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'transactions.xlsx';
+        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
+        $writer->save($temp_file);
+
+        return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
+    }
+
+    private function getTransactions($startDate, $endDate)
+    {
+        return HTrans::with(['dtrans.product', 'user'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereIn('status', ['paid', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function reports(){
+        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        return view('admin.reports', compact('htrans'));
+    }
+
     public function index()
     {
         $totalSales = HTrans::sum('total_price');
@@ -27,7 +113,7 @@ class AdminController extends Controller
             ->take(5)
             ->with('product')
             ->get();
-            $salesData = HTrans::select(
+        $salesData = HTrans::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(total_price) as total_sales')
             )
@@ -54,70 +140,6 @@ class AdminController extends Controller
         // Logika untuk menampilkan pesanan
         $htrans = HTrans::where('status', 'pending')->get();
         return view('admin.orders', compact('htrans')); // Buat file view di resources/views/admin/orders.blade.php
-    }
-
-    // Reports
-    public function reports()
-    {
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
-                    ->orderBy('created_at', 'desc')
-                    ->get();
-
-        return view('admin.reports', compact('htrans'));
-    }
-
-    public function generateReports(Request $request)
-    {
-        $startDate = Carbon::parse($request->start_date)->startOfDay();
-        $endDate = Carbon::parse($request->end_date)->endOfDay();
-
-        // Mengambil semua transaksi dalam rentang waktu
-        $transactions = HTrans::whereBetween('created_at', [$startDate, $endDate])
-            ->where('status', 'paid')
-            ->get();
-
-        $reports = [];
-
-        foreach ($transactions as $trans) {
-            $date = $trans->created_at->format('Y-m-d');
-
-            if (!isset($reports[$date])) {
-                $reports[$date] = [
-                    'total_transactions' => 0,
-                    'total_sales' => 0,
-                    'total_products' => 0,
-                    'products' => []
-                ];
-            }
-
-            $reports[$date]['total_transactions']++;
-            $reports[$date]['total_sales'] += $trans->total_price;
-
-            foreach ($trans->details as $detail) {
-                $reports[$date]['total_products'] += $detail->quantity;
-
-                $productId = $detail->product->id;
-                if (!isset($reports[$date]['products'][$productId])) {
-                    $reports[$date]['products'][$productId] = [
-                        'name' => $detail->product->name,
-                        'quantity' => 0,
-                        'total' => 0
-                    ];
-                }
-
-                $reports[$date]['products'][$productId]['quantity'] += $detail->quantity;
-                $reports[$date]['products'][$productId]['total'] += $detail->subtotal;
-            }
-        }
-
-        // Sort by date
-        ksort($reports);
-
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
-                        ->orderBy('created_at', 'desc')
-                        ->get();
-
-        return view('admin.reports', compact('reports', 'startDate', 'endDate', 'htrans'));
     }
 
     // Manage Users
