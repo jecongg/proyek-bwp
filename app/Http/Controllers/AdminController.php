@@ -12,6 +12,37 @@ use Carbon\Carbon;
 
 class AdminController extends Controller
 {
+    public function index()
+    {
+        $totalSales = HTrans::sum('total_price');
+        $totalProductsSold = DTrans::sum('quantity');
+        $totalUsersActive = User::where('status', 'active')->count();
+
+        $recentUsers = User::orderBy('id', 'desc')->take(5)->get();
+
+        // Get top selling products
+        $topSellingProducts = DTrans::select('product_id', DB::raw('SUM(quantity) as total_quantity'))
+            ->groupBy('product_id')
+            ->orderBy('total_quantity', 'desc')
+            ->take(5)
+            ->with('product')
+            ->get();
+            $salesData = HTrans::select(
+                DB::raw('DATE(created_at) as date'),
+                DB::raw('SUM(total_price) as total_sales')
+            )
+            ->groupBy('date')
+            ->orderBy('date', 'asc')
+            ->get();
+
+        $salesChartLabels = $salesData->pluck('date')->map(function ($date) {
+            return Carbon::parse($date)->format('d M');
+        });
+        $salesChartData = $salesData->pluck('total_sales');
+
+        return view('admin.dashboard', compact('totalSales', 'totalProductsSold', 'totalUsersActive', 'recentUsers', 'topSellingProducts', 'salesChartLabels', 'salesChartData'));
+    }
+
     public function profile()
     {
         $user = Auth::user();
@@ -31,7 +62,7 @@ class AdminController extends Controller
         $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
                     ->orderBy('created_at', 'desc')
                     ->get();
-                    
+
         return view('admin.reports', compact('htrans'));
     }
 
@@ -49,7 +80,7 @@ class AdminController extends Controller
 
         foreach ($transactions as $trans) {
             $date = $trans->created_at->format('Y-m-d');
-            
+
             if (!isset($reports[$date])) {
                 $reports[$date] = [
                     'total_transactions' => 0,
@@ -64,7 +95,7 @@ class AdminController extends Controller
 
             foreach ($trans->details as $detail) {
                 $reports[$date]['total_products'] += $detail->quantity;
-                
+
                 $productId = $detail->product->id;
                 if (!isset($reports[$date]['products'][$productId])) {
                     $reports[$date]['products'][$productId] = [
@@ -73,7 +104,7 @@ class AdminController extends Controller
                         'total' => 0
                     ];
                 }
-                
+
                 $reports[$date]['products'][$productId]['quantity'] += $detail->quantity;
                 $reports[$date]['products'][$productId]['total'] += $detail->subtotal;
             }
@@ -149,7 +180,7 @@ class AdminController extends Controller
     {
         try {
             DB::beginTransaction();
-            
+
             $htrans = HTrans::findOrFail($id);
             $htrans->status = $request->status;
             $htrans->save();

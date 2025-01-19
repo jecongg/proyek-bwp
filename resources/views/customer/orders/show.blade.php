@@ -69,7 +69,7 @@
                     @if($order->status === 'pending')
                         <form action="{{ route('customer.orders.cancel', $order->id) }}" method="POST">
                             @csrf
-                            @method('PATCH')
+                            @method('POST')
                             <button type="submit" class="btn btn-danger w-100"
                                     onclick="return confirm('Are you sure you want to cancel this order?')">
                                 Cancel Order

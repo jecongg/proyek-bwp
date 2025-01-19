@@ -32,9 +32,7 @@ Route::middleware('auth')->group(function () {
 
 Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     // Admin Dashboard
-    Route::get('/admin/dashboard', function() {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 
     // Product Routes (Admin)
     Route::get('/admin/products', [ProductController::class, 'indexAdmin'])->name('admin.products');
@@ -59,7 +57,7 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
     Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
     Route::get('/admin/reports/{id}/details', [AdminController::class, 'historyDetails'])->name('admin.reports.history-details');
-    
+
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::post('/admin/users/toggle-status/{id}', [AdminController::class, 'toggleStatus'])->name('admin.users.toggleStatus');
     Route::get('/admin/order/{id}/details', [AdminController::class, 'orderDetails'])->name('admin.order.details');
