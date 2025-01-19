@@ -136,10 +136,8 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
 
-        // Check if product is in user's wishlist
-        $inWishlist = Wishlist::where('user_id', auth()->id())
-                             ->where('product_id', $id)
-                             ->exists();
+        // Check if product is in user's wishlist menggunakan relasi
+        $inWishlist = auth()->user()->wishlists()->where('product_id', $id)->exists();
 
         return view('customer.products.show', compact('product', 'inWishlist'));
     }

@@ -41,26 +41,23 @@ class CheckoutController extends Controller
                     'htrans_id' => $htrans->id,
                     'product_id' => $detail->product_id,
                     'quantity' => $detail->quantity,
-                    'price' => $detail->product->price,
-                    'subtotal' => $detail->product->price * $detail->quantity
+                    'price' => $detail->price,
+                    'subtotal' => $detail->subtotal
                 ]);
-
-                // Update stock
-                $detail->product->decrement('stock', $detail->quantity);
             }
 
             // Clear cart
             $cart->details()->delete();
+            $cart->delete();
 
             DB::commit();
 
-            return redirect()->route('customer.orders.show', ['order' => $htrans->id])
+            return redirect()->route('customer.orders.show', $htrans->id)
                            ->with('success', 'Order placed successfully!');
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return redirect()->back()
-                           ->with('error', 'Something went wrong! Please try again.');
+            return redirect()->back()->with('error', 'Something went wrong! Please try again.');
         }
     }
 }

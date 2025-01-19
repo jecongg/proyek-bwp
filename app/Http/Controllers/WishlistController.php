@@ -1,4 +1,4 @@
-<?php       
+<?php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,52 +9,37 @@ class WishlistController extends Controller
 {
     public function index()
     {
-        $wishlists = Wishlist::where('user_id', Auth::id())->get();
-        return view('customer.wishlist.index', compact('wishlists'));
+        $products = auth()->user()->wishlists()->with('category')->get();
+        return view('customer.wishlist.index', compact('products'));
     }
 
     public function add(Request $request)
     {
         try {
-            // Validasi input produk_id
             $validated = $request->validate([
-                'product_id' => 'required|exists:products,id',
+                'product_id' => 'required|exists:product,id',
             ]);
 
-            // Cek apakah produk sudah ada di wishlist
-            $existingWishlist = Wishlist::where('user_id', Auth::id())
-                ->where('product_id', $validated['product_id'])
-                ->first();
+            auth()->user()->wishlists()->attach($validated['product_id']);
 
-            if ($existingWishlist) {
-                // Jika produk sudah ada di wishlist, tampilkan pesan
-                return redirect()->back()->with('error', 'Product is already in your wishlist!');
-            }
-
-            // Menambahkan produk ke wishlist
-            Wishlist::create([
-                'user_id' => Auth::id(),
-                'product_id' => $validated['product_id'],
-            ]);
-
-            // Redirect dengan pesan sukses
             return redirect()->back()->with('success', 'Product added to wishlist successfully!');
         } catch (\Exception $e) {
-            // Tangani error jika terjadi exception
-            return back()->withInput()->with('error', 'Failed to add product to wishlist. Please try again.');
+            return back()->with('error', 'Failed to add product to wishlist. Please try again.');
         }
     }
 
     public function remove(Request $request)
     {
-        $request->validate([
-            'product_id' => 'required|exists:products,id',
-        ]);
+        try {
+            $validated = $request->validate([
+                'product_id' => 'required|exists:product,id',
+            ]);
 
-        Wishlist::where('user_id', Auth::id())
-            ->where('product_id', $request->product_id)
-            ->delete();
+            auth()->user()->wishlists()->detach($validated['product_id']);
 
-        return redirect()->back()->with('status', 'Product removed from wishlist!');
+            return redirect()->back()->with('success', 'Product removed from wishlist!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Failed to remove product from wishlist. Please try again.');
+        }
     }
 }

@@ -14,11 +14,6 @@ class OrderController extends Controller
                        ->orderBy('created_at', 'desc')
                        ->get();
 
-        // Debug untuk melihat query dan hasilnya
-        \Log::info('User ID: ' . auth()->id());
-        \Log::info('Orders count: ' . $orders->count());
-        \Log::info('Orders data: ' . $orders);
-
         return view('customer.orders.index', compact('orders'));
     }
 

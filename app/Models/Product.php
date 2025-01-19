@@ -28,8 +28,9 @@ class Product extends Model
         return $this->hasOne(Category::class, 'id', 'id_category');
     }
 
-    public function wishlists()
+    public function wishlistedBy()
     {
-        return $this->hasMany(Wishlist::class);
+        return $this->belongsToMany(User::class, 'wishlist', 'product_id', 'user_id')
+                    ->withTimestamps();
     }
 }

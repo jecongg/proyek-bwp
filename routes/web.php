@@ -95,8 +95,7 @@ Route::group(['middleware' => ['auth', 'role:Customer']], function () {
         Route::get('/', [CartController::class, 'index'])->name('index');
         Route::post('/add', [CartController::class, 'addToCart'])->name('add');
         Route::patch('/update/{detail}', [CartController::class, 'updateQuantity'])->name('update-quantity');
-        Route::delete('/remove/{detail}', [CartController::class, 'removeItem'])->name('remove-item');
-        Route::post('/clear', [CartController::class, 'clear'])->name('clear');
+        Route::delete('/{detail}', [CartController::class, 'removeItem'])->name('delete');
     });
 
     Route::get('customer/orders', [OrderController::class, 'index'])->name('customer.orders');

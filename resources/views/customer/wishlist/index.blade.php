@@ -18,24 +18,24 @@
         </div>
     @endif
 
-    @if($wishlists->count() > 0)
+    @if($products->count() > 0)
         <div class="row">
-            @foreach($wishlists as $wishlist)
+            @foreach($products as $product)
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
-                        <img src="{{ asset($wishlist->product->url_image) }}"
+                        <img src="{{ asset($product->url_image) }}"
                              class="card-img-top product-image"
-                             alt="{{ $wishlist->product->name }}">
+                             alt="{{ $product->name }}">
                         <div class="card-body">
-                            <h5 class="card-title">{{ $wishlist->product->name }}</h5>
+                            <h5 class="card-title">{{ $product->name }}</h5>
                             <p class="card-text text-success fw-bold">
-                                Rp {{ number_format($wishlist->product->price, 0, ',', '.') }}
+                                Rp {{ number_format($product->price, 0, ',', '.') }}
                             </p>
 
                             <div class="d-flex gap-2">
                                 <form action="{{ route('customer.cart.add') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="product_id" value="{{ $wishlist->product_id }}">
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-primary">
                                         Add to Cart
@@ -44,7 +44,7 @@
 
                                 <form action="{{ route('customer.wishlist.remove') }}" method="POST">
                                     @csrf
-                                    <input type="hidden" name="product_id" value="{{ $wishlist->product_id }}">
+                                    <input type="hidden" name="product_id" value="{{ $product->id }}">
                                     <button type="submit" class="btn btn-outline-danger">
                                         Remove
                                     </button>
