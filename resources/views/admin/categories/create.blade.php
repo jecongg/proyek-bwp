@@ -38,7 +38,7 @@
 
                         <div class="mb-3">
                             <label for="url_image" class="form-label">Category Image URL</label>
-                            <input type="textarea" class="form-control @error('url_image') is-invalid @enderror"
+                            <input type="text" class="form-control @error('url_image') is-invalid @enderror"
                                    id="url_image" name="url_image" value="{{ old('url_image') }}"
                                    placeholder="https://example.com/image.jpg" required>
                             <div class="form-text">Enter the URL of the category image</div>
@@ -49,7 +49,7 @@
 
                         <div class="d-flex justify-content-end gap-2">
                             <a href="{{ route('admin.categories') }}" class="btn btn-secondary">Cancel</a>
-                            <button type="submit" class="btn btn-primary">Add Category</button>
+                            <button type="submit" class="btn btn-primary btn-lg">Add Category</button>
                         </div>
                     </form>
                 </div>
@@ -57,4 +57,20 @@
         </div>
     </div>
 </div>
+
+<style>
+    .form-label {
+        font-size: 1.5rem;
+    }
+    .form-control {
+        font-size: 1.25rem;
+    }
+    .btn-lg {
+        font-size: 1.25rem;
+    }
+    .card-header h5 {
+        font-size: 1.5rem;
+    }
+</style>
+
 @endsection

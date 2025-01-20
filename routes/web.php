@@ -61,9 +61,9 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
     Route::post('/admin/users/toggle-status/{id}', [AdminController::class, 'toggleStatus'])->name('admin.users.toggleStatus');
     Route::get('/admin/order/{id}/details', [AdminController::class, 'orderDetails'])->name('admin.order.details');
-    Route::get('/admin/order/{id}/edit', [AdminController::class, 'orderEdit'])->name('admin.order.edit');
-    Route::put('/admin/order/{id}/update', [AdminController::class, 'updateOrder'])->name('admin.order.update');
-
+    Route::put('/admin/orders/{id}/accept', [AdminController::class, 'updateStatus'])->name('admin.order.accept');
+    Route::put('/admin/orders/{id}/complete', [AdminController::class, 'updateStatus'])->name('admin.order.complete');
+    Route::put('/admin/orders/{id}/cancel', [AdminController::class, 'updateStatus'])->name('admin.order.cancel');
     Route::get('/admin/export-transactions', [AdminController::class, 'exportTransactions'])->name('admin.export-transactions');
     Route::get('/admin/reports', [AdminController::class, 'handleReport'])->name('admin.reports.handle');
 });

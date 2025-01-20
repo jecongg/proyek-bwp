@@ -9,8 +9,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     @if(Auth::user()->url_image)
-                        <img src="{{ asset(Auth::user()->url_image) }}" alt="Profile Image" class="profile-image" style="width: 200px; height: 200px;
-                         object-fit: cover; border-radius: 50%;">
+                        <img src="{{ asset(Auth::user()->url_image) }}" alt="Profile Image" class="profile-image" style="width: 200px; height: 200px; object-fit: cover; border-radius: 50%;">
                     @else
                         <img src="/path/to/default/profile/icon.png" alt="Default Profile Icon" class="profile-image">
                     @endif
@@ -39,11 +38,11 @@
                             <input type="text" class="form-control" id="phone" name="phone" value="{{ $user->phone }}">
                         </div>
                         <div class="form-group">
-                            <label for="password">Current Password</label>
+                            <label for="current_password">Current Password</label>
                             <input type="password" class="form-control" id="current_password" name="current_password" placeholder="Enter your current password">
                         </div>
                         <div class="form-group">
-                            <label for="password">New Password</label>
+                            <label for="new_password">New Password</label>
                             <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Enter a new password">
                         </div>
                         <div class="form-group">
@@ -62,5 +61,19 @@
     </div>
 </div>
 
+<style>
+    .form-group label {
+        font-size: 1.5rem;
+    }
+    .form-group input {
+        font-size: 1.25rem;
+    }
+    .btn {
+        font-size: 1.25rem;
+    }
+    .card-title, .card-text {
+        font-size: 1.5rem;
+    }
+</style>
 
 @endsection

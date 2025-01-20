@@ -138,7 +138,7 @@ class AdminController extends Controller
     public function orders()
     {
         // Logika untuk menampilkan pesanan
-        $htrans = HTrans::where('status', 'pending')->get();
+        $htrans = HTrans::whereIn('status', ['pending', 'processed'])->get();
         return view('admin.orders', compact('htrans')); // Buat file view di resources/views/admin/orders.blade.php
     }
 
@@ -198,32 +198,32 @@ class AdminController extends Controller
         return view('admin.orders.order-edit', compact('htrans', 'dtrans'));
     }
 
-    public function updateOrder(Request $request, $id)
+
+    public function historyDetails($id){
+        $dtrans = DTrans::where('htrans_id', $id)->get();
+        $htrans = HTrans::findOrFail($id);
+        return view('admin.reports.history-details', compact('htrans', 'dtrans'));
+    }
+
+    public function updateStatus(Request $request, $id)
     {
         try {
             DB::beginTransaction();
 
             $htrans = HTrans::findOrFail($id);
-            $htrans->status = $request->status;
-            $htrans->save();
 
-            // Update quantities
-            if($request->has('quantities')) {
-                foreach($request->quantities as $dtransId => $quantity) {
-                    $dtrans = DTrans::findOrFail($dtransId);
-                    $dtrans->quantity = $quantity;
-                    $dtrans->subtotal = $dtrans->price * $quantity;
-                    $dtrans->save();
-                }
-
-                // Recalculate total price
-                $newTotal = DTrans::where('htrans_id', $id)->sum('subtotal');
-                $htrans->total_price = $newTotal;
-                $htrans->save();
+            if ($request->input('action') == 'accept') {
+                $htrans->status = 'processed';
+            } elseif ($request->input('action') == 'complete') {
+                $htrans->status = 'completed';
+            } elseif ($request->input('action') == 'cancel') {
+                $htrans->status = 'cancelled';
             }
 
+            $htrans->save();
+
             DB::commit();
-            return redirect()->back()->with('success', 'Order berhasil diupdate!');
+            return redirect()->back()->with('success', 'Order status berhasil diupdate!');
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -231,9 +231,5 @@ class AdminController extends Controller
         }
     }
 
-    public function historyDetails($id){
-        $dtrans = DTrans::where('htrans_id', $id)->get();
-        $htrans = HTrans::findOrFail($id);
-        return view('admin.reports.history-details', compact('htrans', 'dtrans'));
-    }
+
 }

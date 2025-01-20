@@ -27,15 +27,38 @@
                             <label for="url_image">Category Image URL</label>
                             <input type="text" class="form-control" id="url_image" name="url_image" value="{{ old('url_image', $category->url_image) }}">
                             @if($category->url_image)
-                                <img src="{{ asset($category->url_image) }}" alt="{{ $category->name }}" class="img-fluid mt-2" width="150">
+                                <img src="{{ asset($category->url_image) }}" alt="{{ $category->name }}" class="img-fluid mt-2 product-image-preview">
                             @endif
                         </div>
-                        <button type="submit" class="btn btn-primary">Update Product</button>
+
+                        <button type="submit" class="btn btn-primary btn-lg mt-3">Update Category</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
 
+<style>
+    .form-group label {
+        font-size: 1.5rem;
+    }
+    .form-group input, .form-group textarea {
+        font-size: 1.25rem;
+    }
+    .btn-lg {
+        font-size: 1.25rem;
+    }
+    .card-header {
+        font-size: 1.5rem;
+    }
+    .product-image-preview {
+        width: 100%;
+        max-width: 300px;
+        height: auto;
+        border-radius: 8px;
+        margin-top: 10px;
+    }
+</style>
+
+@endsection

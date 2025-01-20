@@ -3,8 +3,8 @@
 @section('content')
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="section-title">Manage Products</h2>
-        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary">
+        <h2 class="section-title">Manage Categories</h2>
+        <a href="{{ route('admin.categories.create') }}" class="btn btn-primary btn-lg">
             <i class="fas fa-plus"></i> Add New Category
         </a>
     </div>
@@ -24,30 +24,27 @@
                         <tr>
                             <th>Image</th>
                             <th>Name</th>
-                            <th>Category</th>
+                            <th>Description</th>
                             <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($categories as $category)
+                        @foreach($categories as $category)
                             <tr>
                                 <td>
-                                    <img src="{{ asset($category->url_image) }}" alt="{{ $category->name }}"
-                                         class="product-thumbnail">
+                                    <img src="{{ asset($category->url_image) }}" alt="{{ $category->name }}" class="category-image">
                                 </td>
                                 <td>{{ $category->name }}</td>
                                 <td>{{ $category->description }}</td>
                                 <td>
-                                    <div class="btn-group">
-                                        <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('admin.categories.edit', $category->id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">No category found</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -56,21 +53,31 @@
 </div>
 
 <style>
-    .product-thumbnail {
-        width: 50px;
-        height: 50px;
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .btn-lg {
+        font-size: 1.25rem;
+    }
+    .table th, .table td {
+        font-size: 1.25rem;
+    }
+    .category-image {
+        width: 100px;
+        height: 100px;
         object-fit: cover;
-        border-radius: 4px;
+        border-radius: 8px;
     }
-
-    .table > :not(caption) > * > * {
-        padding: 1rem;
-        vertical-align: middle;
-    }
-
     .btn-group .btn {
-        padding: 0.25rem 0.5rem;
+        padding: 0.5rem 1rem;
     }
 </style>
 
+<script>
+    function deleteCategory(categoryId) {
+        if (confirm('Are you sure you want to delete this category?')) {
+            document.getElementById('delete-form-' + categoryId).submit();
+        }
+    }
+</script>
 @endsection

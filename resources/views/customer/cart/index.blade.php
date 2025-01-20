@@ -28,9 +28,9 @@
                         @foreach($cart->details as $item)
                             <div class="cart-item d-flex align-items-center mb-3" id="cart-item-{{ $item->id }}">
                                 <img src="{{ asset($item->product->url_image) }}" alt="{{ $item->product->name }}"
-                                     class="cart-item-image">
+                                     class="cart-item-image me-3">
                                 <div class="cart-item-details flex-grow-1 ms-3">
-                                    <h5 class="mb-1">{{ $item->product->name }}</h5>
+                                    <h4 class="mb-1">{{ $item->product->name }}</h4>
                                     <p class="text-muted mb-1">Rp {{ number_format($item->product->price, 0, ',', '.') }}</p>
                                     <div class="d-flex align-items-center">
                                         <input type="number"
@@ -42,12 +42,12 @@
                                         {{-- Tombol Update dan Delete --}}
                                         <div class="btn-group ms-2">
                                             <button type="button"
-                                                    class="btn btn-outline-primary btn-sm"
+                                                    class="btn btn-primary btn-sm"
                                                     onclick="updateCart({{ $item->id }})">
                                                 <i class="fas fa-sync-alt"></i> Update
                                             </button>
                                             <button type="button"
-                                                    class="btn btn-outline-danger btn-sm ms-1"
+                                                    class="btn btn-danger btn-sm ms-1"
                                                     onclick="removeFromCart({{ $item->id }})">
                                                 <i class="fas fa-trash"></i> Remove
                                             </button>
@@ -66,7 +66,7 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title mb-3">Cart Summary</h5>
+                        <h3 class="card-title mb-3">Cart Summary</h3>
                         <div class="d-flex justify-content-between mb-3">
                             <span>Total Items:</span>
                             <span class="total-items">{{ $cart->details->sum('quantity') }}</span>
@@ -93,8 +93,8 @@
 
 <style>
     .cart-item-image {
-        width: 100px;
-        height: 100px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
         border-radius: 8px;
     }
@@ -111,6 +111,14 @@
     .cart-item:last-child {
         border-bottom: none;
         padding-bottom: 0;
+    }
+
+    .card-title {
+        font-size: 2rem;
+    }
+
+    .cart-item-details h4, .cart-item-details p, .cart-item-price h6, .cart-item-price p {
+        font-size: 1.5rem;
     }
 </style>
 

@@ -4,10 +4,10 @@
 <div class="container my-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title">Manage Products</h2>
-        <a href="{{ route('admin.products.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.products.create') }}" class="btn btn-primary btn-lg">
             <i class="fas fa-plus"></i> Add New Product
         </a>
-        </div>
+    </div>
 
     @if(Session::has('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -31,35 +31,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($products as $product)
+                        @foreach($products as $product)
                             <tr>
                                 <td>
-                                    <img src="{{ asset($product->url_image) }}" alt="{{ $product->name }}"
-                                         class="product-thumbnail">
+                                    <img src="{{ asset($product->url_image) }}" alt="{{ $product->name }}" class="product-image">
                                 </td>
                                 <td>{{ $product->name }}</td>
                                 <td>{{ $product->category->name }}</td>
                                 <td>Rp {{ number_format($product->price, 0, ',', '.') }}</td>
                                 <td>{{ $product->stock }}</td>
                                 <td>
-                                    <div class="btn-group">
-                                        <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
-                                        <form id="delete-form-{{ $product->id }}"
-                                              action="{{ route('admin.products.delete', $product->id) }}"
-                                              method="POST" style="display: none;">
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning btn-sm">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </a>
+                                        <form id="delete-form-{{ $product->id }}" action="{{ route('admin.products.delete', $product->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('DELETE')
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteProduct({{ $product->id }})">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
                                         </form>
-                                        <button type="button" class="btn btn-sm btn-outline-danger"
-                                                onclick="deleteProduct({{ $product->id }})">Delete</button>
                                     </div>
                                 </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="6" class="text-center">No products found</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -68,20 +64,23 @@
 </div>
 
 <style>
-    .product-thumbnail {
-        width: 50px;
-        height: 50px;
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .btn-lg {
+        font-size: 1.25rem;
+    }
+    .table th, .table td {
+        font-size: 1.25rem;
+    }
+    .product-image {
+        width: 100px;
+        height: 100px;
         object-fit: cover;
-        border-radius: 4px;
+        border-radius: 8px;
     }
-
-    .table > :not(caption) > * > * {
-        padding: 1rem;
-        vertical-align: middle;
-    }
-
     .btn-group .btn {
-        padding: 0.25rem 0.5rem;
+        padding: 0.5rem 1rem;
     }
 </style>
 
