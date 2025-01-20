@@ -46,7 +46,7 @@
             <div class="row mb-3">
                 <div class="col-md-3 fw-bold">Status</div>
                 <div class="col-md-9">
-                    <span class="badge bg-{{ $htrans->status === 'paid' ? 'success' : 'danger' }}">
+                    <span class="badge bg-{{ $htrans->status === 'completed' ? 'success' : 'danger' }}">
                         {{ ucfirst($htrans->status) }}
                     </span>
                 </div>

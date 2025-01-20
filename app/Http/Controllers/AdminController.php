@@ -52,8 +52,12 @@ class AdminController extends Controller
     private function generateReport($startDate, $endDate)
     {
         $transactions = $this->getTransactions($startDate, $endDate);
+<<<<<<< HEAD
         $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
                     ->whereBetween('created_at', [$startDate, $endDate])
+=======
+        $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
+>>>>>>> afc57ab1d36a520adca33238bfc12a63d7a5b96e
                     ->orderBy('created_at', 'desc')
                     ->get();
 
@@ -102,8 +106,20 @@ class AdminController extends Controller
 
     private function getTransactions($startDate, $endDate)
     {
+<<<<<<< HEAD
         return HTrans::whereIn('status', ['paid', 'cancelled'])
                     ->whereBetween('created_at', [$startDate, $endDate])
+=======
+        return HTrans::with(['dtrans.product', 'user'])
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->whereIn('status', ['completed', 'cancelled'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+    }
+
+    public function reports(){
+        $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
+>>>>>>> afc57ab1d36a520adca33238bfc12a63d7a5b96e
                     ->orderBy('created_at', 'desc')
                     ->get();
     }

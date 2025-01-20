@@ -25,7 +25,7 @@
                                 <td>{{ $h->user->email }}</td>
                                 <td>Rp {{ number_format($h->total_price, 0, ',', '.') }}</td>
                                 <td>
-                                    <span class="badge {{ $h->status == 'paid' ? 'bg-success' : 'bg-danger' }}">
+                                    <span class="badge {{ $h->status == 'completed' ? 'bg-success' : 'bg-danger' }}">
                                         {{ $h->status }}
                                     </span>
                                 </td>
