@@ -21,7 +21,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('register') }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('register') }}">
                     @csrf
                     <div class="row">
                         <div class="col-md-12 mb-4">
@@ -74,8 +74,8 @@
                             @enderror
                         </div>
                         <div class="col-md-12 mb-4">
-                            <label for="image" class="form-label">Profile Image</label>
-                            <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image">
+                            <label for="image" class="form-label">Profile Image URL</label>
+                            <input type="text" class="form-control @error('image') is-invalid @enderror" id="image" name="image" value="{{ old('image') }}">
                             @error('image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -102,17 +102,20 @@
     .auth-card h2 {
         color: var(--primary-dark);
         font-weight: 600;
+        font-size: 2rem; /* Perbesar ukuran font judul */
     }
 
     .form-label {
         color: var(--primary-dark);
         font-weight: 500;
+        font-size: 1.25rem; /* Perbesar ukuran font label */
     }
 
     .form-control {
         padding: 0.75rem;
         border: 1px solid #e0e0e0;
         border-radius: 8px;
+        font-size: 1.25rem; /* Perbesar ukuran font input */
     }
 
     .form-control:focus {
@@ -124,6 +127,7 @@
         color: var(--primary);
         text-decoration: none;
         font-weight: 500;
+        font-size: 1.25rem; /* Perbesar ukuran font link */
     }
 
     .auth-link:hover {
@@ -132,6 +136,7 @@
 
     .btn-primary {
         padding: 0.75rem;
+        font-size: 1.25rem; /* Perbesar ukuran font tombol */
         font-weight: 500;
     }
 </style>

@@ -79,7 +79,7 @@ class AuthController extends Controller
                 'string',
                 'email',
                 'max:255',
-                'unique:user,email'
+                'unique:users,email'
             ],
             'phone' => [
                 'required',
@@ -99,8 +99,7 @@ class AuthController extends Controller
             ],
             'image' => [
                 'nullable',
-                'image',
-                'mimes:jpeg,png,jpg,gif'
+                'string'
             ]
         ], [
             'name.required' => 'Name is required',
@@ -115,8 +114,6 @@ class AuthController extends Controller
             'password.confirmed' => 'Password confirmation does not match',
             'role.required' => 'Please select a role',
             'role.in' => 'Invalid role selected',
-            'image.image' => 'The file must be an image',
-            'image.mimes' => 'The image must be a file of type: jpeg, png, jpg, gif'
         ]);
 
         try {
@@ -127,7 +124,7 @@ class AuthController extends Controller
                 'phone' => $validated['phone'],
                 'password' => Hash::make($validated['password']),
                 'role' => $validated['role'],
-                'url_image' => $request->hasFile('image') ? $request->file('image')->store('profile_images', 'public') : null
+                'url_image' => $validated['image'] ?? null // Gunakan URL yang dimasukkan oleh pengguna
             ]);
 
             // Login user setelah register
