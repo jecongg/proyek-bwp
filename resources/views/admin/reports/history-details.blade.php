@@ -4,7 +4,7 @@
 <div class="container mt-4 mb-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="section-title mb-4">Order Details</h2>
-        <a href="{{ route('admin.reports') }}" class="btn btn-secondary">
+        <a href="{{ route('admin.report') }}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Kembali ke Reports
         </a>
     </div>
