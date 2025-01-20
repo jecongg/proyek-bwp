@@ -33,7 +33,7 @@ class AdminController extends Controller
     private function generateReport($startDate, $endDate)
     {
         $transactions = $this->getTransactions($startDate, $endDate);
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+        $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
@@ -85,13 +85,13 @@ class AdminController extends Controller
     {
         return HTrans::with(['dtrans.product', 'user'])
             ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereIn('status', ['paid', 'cancelled'])
+            ->whereIn('status', ['completed', 'cancelled'])
             ->orderBy('created_at', 'desc')
             ->get();
     }
 
     public function reports(){
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+        $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
