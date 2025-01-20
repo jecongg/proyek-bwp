@@ -44,7 +44,7 @@
                     <img src="{{asset('images/cue.jpg')}}" alt="Playing Cues" class="img-fluid category-image">
                     <div class="category-content">
                         <h4>Playing Cues</h4>
-                        <a href="{{ route('customer.products', ['category' => 'Play Cue']) }}" class="btn btn-primary">View All</a>
+                        <a href="{{ route('customer.products', ['category' => '2']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
@@ -53,7 +53,7 @@
                     <img src="{{asset('images/cuecase.jpg')}}" alt="Cue Cases" class="img-fluid category-image">
                     <div class="category-content">
                         <h4>Cue Cases</h4>
-                        <a href="{{ route('customer.products', ['category' => 'Cue Case']) }}" class="btn btn-primary">View All</a>
+                        <a href="{{ route('customer.products', ['category' => '8']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
@@ -62,7 +62,7 @@
                     <img src="{{asset('images/gloves.jpg')}}" alt="Gloves" class="img-fluid category-image">
                     <div class="category-content">
                         <h4>Gloves</h4>
-                        <a href="{{ route('customer.products', ['category' => 'Gloves']) }}" class="btn btn-primary">View All</a>
+                        <a href="{{ route('customer.products', ['category' => '6']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>
@@ -71,7 +71,7 @@
                     <img src="{{asset('images/pooltable.jpg')}}" alt="Pool Table" class="img-fluid category-image">
                     <div class="category-content">
                         <h4>Pool Table</h4>
-                        <a href="{{ route('customer.products', ['category' => 'Pool Table']) }}" class="btn btn-primary">View All</a>
+                        <a href="{{ route('customer.products', ['category' => '20']) }}" class="btn btn-primary">View All</a>
                     </div>
                 </div>
             </div>

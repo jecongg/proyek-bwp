@@ -119,7 +119,7 @@ class ProductController extends Controller
         $query = Product::query();
 
         if ($request->filled('category')) {
-            $query->where('id_category', $request->category);
+            $query->where('id_category', [$request->category]);
         }
 
         if ($request->filled('search')) {
