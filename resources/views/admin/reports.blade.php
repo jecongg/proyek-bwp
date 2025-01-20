@@ -50,11 +50,11 @@
 
         <form action="{{ route('admin.reports.handle') }}" method="GET" class="row g-3">
             <div class="col-md-4">
-                <label class="form-label">Tanggal Mulai</label>
+                <label class="form-label">Date Start</label>
                 <input type="date" name="start_date" class="form-control" required>
             </div>
             <div class="col-md-4">
-                <label class="form-label">Tanggal Selesai</label>
+                <label class="form-label">Date End</label>
                 <input type="date" name="end_date" class="form-control" required>
             </div>
             <div class="col-md-4 d-flex align-items-end">
