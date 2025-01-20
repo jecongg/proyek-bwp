@@ -56,17 +56,20 @@
     .auth-card h2 {
         color: var(--primary-dark);
         font-weight: 600;
+        font-size: 2rem; /* Perbesar ukuran font judul */
     }
 
     .form-label {
         color: var(--primary-dark);
         font-weight: 500;
+        font-size: 1.25rem; /* Perbesar ukuran font label */
     }
 
     .form-control {
         padding: 0.75rem;
         border: 1px solid #e0e0e0;
         border-radius: 8px;
+        font-size: 1.25rem; /* Perbesar ukuran font input */
     }
 
     .form-control:focus {
@@ -74,24 +77,25 @@
         box-shadow: 0 0 0 0.2rem rgba(77, 161, 169, 0.25);
     }
 
-    .auth-link {
-        color: var(--primary);
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .auth-link:hover {
-        color: var(--primary-dark);
+    .form-check-label {
+        font-size: 1.25rem; /* Perbesar ukuran font label checkbox */
     }
 
     .btn-primary {
         padding: 0.75rem;
+        font-size: 1.25rem; /* Perbesar ukuran font tombol */
         font-weight: 500;
     }
 
-    .form-check-input:checked {
-        background-color: var(--primary);
-        border-color: var(--primary);
+    .auth-link {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 1.25rem; /* Perbesar ukuran font link */
+    }
+
+    .auth-link:hover {
+        color: var(--primary-dark);
     }
 </style>
 @endsection
