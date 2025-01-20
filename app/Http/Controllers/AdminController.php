@@ -18,6 +18,25 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 class AdminController extends Controller
 {
 
+    public function reports()
+    {
+        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        // Filter out transactions with deleted products
+        $htrans = $htrans->filter(function ($h) {
+            foreach ($h->dtrans as $d) {
+                if ($d->product === null) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        return view('admin.reports', compact('htrans'));
+    }
+    
     public function handleReport(Request $request)
     {
         $startDate = Carbon::parse($request->start_date)->startOfDay();
@@ -34,10 +53,21 @@ class AdminController extends Controller
     {
         $transactions = $this->getTransactions($startDate, $endDate);
         $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+                    ->whereBetween('created_at', [$startDate, $endDate])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-        return view('admin.reports', compact('htrans','transactions', 'startDate', 'endDate'));
+        // Filter out transactions with deleted products
+        $htrans = $htrans->filter(function ($h) {
+            foreach ($h->dtrans as $d) {
+                if ($d->product === null) {
+                    return false;
+                }
+            }
+            return true;
+        });
+
+        return view('admin.reports', compact('htrans', 'transactions', 'startDate', 'endDate'));
     }
 
     private function exportTransactions($startDate, $endDate)
@@ -46,56 +76,36 @@ class AdminController extends Controller
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
-
-        // Set the headers
-        $sheet->setCellValue('A1', 'Transaction ID');
-        $sheet->setCellValue('B1', 'User Name');
+        $sheet->setCellValue('A1', 'ID');
+        $sheet->setCellValue('B1', 'User Email');
         $sheet->setCellValue('C1', 'Total Price');
         $sheet->setCellValue('D1', 'Status');
-        $sheet->setCellValue('E1', 'Created At');
-        $sheet->setCellValue('F1', 'Product Name');
-        $sheet->setCellValue('G1', 'Quantity');
-        $sheet->setCellValue('H1', 'Price');
+        $sheet->setCellValue('E1', 'Date Time');
 
-        // Fill the data
         $row = 2;
-        foreach ($transactions as $htrans) {
-            foreach ($htrans->dtrans as $dtrans) {
-                $sheet->setCellValue('A' . $row, $htrans->id);
-                $sheet->setCellValue('B' . $row, $htrans->user->name);
-                $sheet->setCellValue('C' . $row, $htrans->total_price);
-                $sheet->setCellValue('D' . $row, $htrans->status);
-                $sheet->setCellValue('E' . $row, $htrans->created_at);
-                $sheet->setCellValue('F' . $row, $dtrans->product->name);
-                $sheet->setCellValue('G' . $row, $dtrans->quantity);
-                $sheet->setCellValue('H' . $row, $dtrans->price);
-                $row++;
-            }
+        foreach ($transactions as $transaction) {
+            $sheet->setCellValue('A' . $row, $transaction->id);
+            $sheet->setCellValue('B' . $row, $transaction->user->email);
+            $sheet->setCellValue('C' . $row, $transaction->total_price);
+            $sheet->setCellValue('D' . $row, $transaction->status);
+            $sheet->setCellValue('E' . $row, $transaction->created_at);
+            $row++;
         }
 
         $writer = new Xlsx($spreadsheet);
-        $fileName = 'transactions.xlsx';
-        $temp_file = tempnam(sys_get_temp_dir(), $fileName);
-        $writer->save($temp_file);
+        $fileName = 'transactions_' . $startDate->format('Ymd') . '_to_' . $endDate->format('Ymd') . '.xlsx';
+        $filePath = storage_path('app/public/' . $fileName);
+        $writer->save($filePath);
 
-        return response()->download($temp_file, $fileName)->deleteFileAfterSend(true);
+        return response()->download($filePath)->deleteFileAfterSend(true);
     }
 
     private function getTransactions($startDate, $endDate)
     {
-        return HTrans::with(['dtrans.product', 'user'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereIn('status', ['paid', 'cancelled'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
-    public function reports(){
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+        return HTrans::whereIn('status', ['paid', 'cancelled'])
+                    ->whereBetween('created_at', [$startDate, $endDate])
                     ->orderBy('created_at', 'desc')
                     ->get();
-
-        return view('admin.reports', compact('htrans'));
     }
 
     public function index()
@@ -112,7 +122,11 @@ class AdminController extends Controller
             ->orderBy('total_quantity', 'desc')
             ->take(5)
             ->with('product')
-            ->get();
+            ->get()
+            ->filter(function ($dtrans) {
+                return $dtrans->product !== null;
+            });
+
         $salesData = HTrans::select(
                 DB::raw('DATE(created_at) as date'),
                 DB::raw('SUM(total_price) as total_sales')
@@ -122,11 +136,14 @@ class AdminController extends Controller
             ->get();
 
         $salesChartLabels = $salesData->pluck('date')->map(function ($date) {
-            return Carbon::parse($date)->format('d M');
+            return Carbon::parse($date)->format('Y-m-d');
         });
+
         $salesChartData = $salesData->pluck('total_sales');
 
-        return view('admin.dashboard', compact('totalSales', 'totalProductsSold', 'totalUsersActive', 'recentUsers', 'topSellingProducts', 'salesChartLabels', 'salesChartData'));
+        return view('admin.dashboard', compact(
+            'totalSales', 'totalProductsSold', 'totalUsersActive', 'recentUsers', 'topSellingProducts', 'salesChartLabels', 'salesChartData'
+        ));
     }
 
     public function profile()
@@ -186,8 +203,22 @@ class AdminController extends Controller
 
     public function orderDetails($id)
     {
-        $dtrans = DTrans::where('htrans_id', $id)->get();
         $htrans = HTrans::findOrFail($id);
+        $dtrans = DTrans::where('htrans_id', $id)->get();
+
+        $productDeleted = false;
+        foreach ($dtrans as $d) {
+            if ($d->product === null) {
+                $productDeleted = true;
+                break;
+            }
+        }
+
+        if ($productDeleted && in_array($htrans->status, ['pending', 'processed'])) {
+            $htrans->status = 'cancelled';
+            $htrans->save();
+        }
+
         return view('admin.orders.order-details', compact('htrans', 'dtrans'));
     }
 

@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::put('/admin/orders/{id}/complete', [AdminController::class, 'updateStatus'])->name('admin.order.complete');
     Route::put('/admin/orders/{id}/cancel', [AdminController::class, 'updateStatus'])->name('admin.order.cancel');
     Route::get('/admin/export-transactions', [AdminController::class, 'exportTransactions'])->name('admin.export-transactions');
-    Route::get('/admin/reports', [AdminController::class, 'handleReport'])->name('admin.reports.handle');
+    Route::get('/admin/report/handle', [AdminController::class, 'handleReport'])->name('admin.reports.handle');
 });
 
 Route::group(['middleware' => ['auth', 'role:Customer']], function () {

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Support\Facades\Cookie;
 
 class AuthController extends Controller
 {
@@ -24,7 +25,9 @@ class AuthController extends Controller
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        $remember = $request->has('remember');
+
+        if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
 
             // Check if the user is active
@@ -33,6 +36,15 @@ class AuthController extends Controller
                 return back()->withErrors([
                     'email' => 'Your account is not active.',
                 ])->onlyInput('email');
+            }
+
+            // Save cookies if remember me is checked
+            if ($remember) {
+                Cookie::queue('email', $request->email, 43200); // 30 days
+                Cookie::queue('password', $request->password, 43200); // 30 days
+            } else {
+                Cookie::queue(Cookie::forget('email'));
+                Cookie::queue(Cookie::forget('password'));
             }
 
             // Redirect based on role

@@ -63,16 +63,20 @@
             <div class="card-body">
                 <div class="row align-items-center">
                     <div class="col-md-4">
-                        <img src="{{ asset($d->product->url_image) }}" alt="{{ $d->name }}" class="product-image-detail">
+                        @if($d->product)
+                            <img src="{{ asset($d->product->url_image) }}" alt="{{ $d->product->name }}" class="product-image-detail">
+                        @else
+                            <span class="text-muted">Product Deleted</span>
+                        @endif
                     </div>
                     <div class="col-md-8">
                         <div class="row mb-3">
                             <div class="col-md-3 fw-bold">ID Produk</div>
-                            <div class="col-md-9 data-text">{{ $d->product->id }}</div>
+                            <div class="col-md-9 data-text">{{ $d->product ? $d->product->id : 'N/A' }}</div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-3 fw-bold">Nama Produk</div>
-                            <div class="col-md-9 data-text">{{ $d->product->name }}</div>
+                            <div class="col-md-9 data-text">{{ $d->product ? $d->product->name : 'Product Deleted' }}</div>
                         </div>
                         <div class="row mb-3">
                             <div class="col-md-3 fw-bold">Harga Produk</div>
