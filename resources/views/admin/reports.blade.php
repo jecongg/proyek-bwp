@@ -11,7 +11,9 @@
                     <thead>
                         <tr>
                             <th>ID</th>
+                            <th>User ID</th>
                             <th>User Email</th>
+                            <th>Username</th>
                             <th>Total Price</th>
                             <th>Status</th>
                             <th>Date Time</th>
@@ -22,14 +24,16 @@
                         @foreach($htrans as $h)
                             <tr>
                                 <td>{{ $h->id }}</td>
+                                <td>{{ $h->user->id }}</td>
                                 <td>{{ $h->user->email }}</td>
+                                <td>{{ $h->user->name }}</td>
                                 <td>Rp {{ number_format($h->total_price, 0, ',', '.') }}</td>
                                 <td>
                                     <span class="badge {{ $h->status == 'completed' ? 'bg-success' : 'bg-danger' }}">
                                         {{ $h->status }}
                                     </span>
                                 </td>
-                                <td>{{ $h->created_at->format('d M Y H:i') }}</td>
+                                <td>{{ \Carbon\Carbon::parse($h->created_at)->format('d M Y H:i') }}</td>
                                 <td>
                                     <a href="{{ route('admin.reports.history-details', $h->id) }}" class="btn btn-info btn-lg">Details</a>
                                 </td>
@@ -54,7 +58,8 @@
                 <input type="date" name="end_date" class="form-control" required>
             </div>
             <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary btn-lg">Generate</button>
+                <button type="submit" name="action" value="generate" class="btn btn-primary btn-lg">Generate Reports Here</button>
+                <button type="submit" name="action" value="export" class="btn btn-secondary btn-lg ms-2">Export to Excel File</button>
             </div>
         </form>
     </div>
@@ -77,7 +82,7 @@
         font-size: 1.25rem;
     }
     .btn-lg {
-        font-size: 1.10rem;
+        font-size: 1.25rem;
     }
 </style>
 

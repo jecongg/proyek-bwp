@@ -55,7 +55,6 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
 
     // Orders, Reports, Users
     Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders');
-    Route::get('/admin/report', [AdminController::class, 'reports'])->name('admin.report');
     Route::get('/admin/report/{id}/details', [AdminController::class, 'historyDetails'])->name('admin.reports.history-details');
 
     Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users');
@@ -65,7 +64,8 @@ Route::group(['middleware' => ['auth', 'role:Admin']], function () {
     Route::put('/admin/orders/{id}/complete', [AdminController::class, 'updateStatus'])->name('admin.order.complete');
     Route::put('/admin/orders/{id}/cancel', [AdminController::class, 'updateStatus'])->name('admin.order.cancel');
     Route::get('/admin/export-transactions', [AdminController::class, 'exportTransactions'])->name('admin.export-transactions');
-    Route::get('/admin/report/handle', [AdminController::class, 'handleReport'])->name('admin.reports.handle');
+    Route::get('/admin/reports', [AdminController::class, 'reports'])->name('admin.reports');
+    Route::get('/admin/reports/handle', [AdminController::class, 'handleReports'])->name('admin.reports.handle');
 });
 
 Route::group(['middleware' => ['auth', 'role:Customer']], function () {

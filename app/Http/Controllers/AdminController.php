@@ -17,27 +17,16 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class AdminController extends Controller
 {
-
     public function reports()
     {
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
+        $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-        // Filter out transactions with deleted products
-        $htrans = $htrans->filter(function ($h) {
-            foreach ($h->dtrans as $d) {
-                if ($d->product === null) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
         return view('admin.reports', compact('htrans'));
     }
-    
-    public function handleReport(Request $request)
+
+    public function handleReports(Request $request)
     {
         $startDate = Carbon::parse($request->start_date)->startOfDay();
         $endDate = Carbon::parse($request->end_date)->endOfDay();
@@ -51,27 +40,12 @@ class AdminController extends Controller
 
     private function generateReport($startDate, $endDate)
     {
-        $transactions = $this->getTransactions($startDate, $endDate);
-<<<<<<< HEAD
-        $htrans = HTrans::whereIn('status', ['paid', 'cancelled'])
-                    ->whereBetween('created_at', [$startDate, $endDate])
-=======
         $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
->>>>>>> afc57ab1d36a520adca33238bfc12a63d7a5b96e
+                    ->whereBetween('created_at', [$startDate, $endDate])
                     ->orderBy('created_at', 'desc')
                     ->get();
 
-        // Filter out transactions with deleted products
-        $htrans = $htrans->filter(function ($h) {
-            foreach ($h->dtrans as $d) {
-                if ($d->product === null) {
-                    return false;
-                }
-            }
-            return true;
-        });
-
-        return view('admin.reports', compact('htrans', 'transactions', 'startDate', 'endDate'));
+        return view('admin.reports', compact('htrans', 'startDate', 'endDate'));
     }
 
     private function exportTransactions($startDate, $endDate)
@@ -81,19 +55,31 @@ class AdminController extends Controller
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
         $sheet->setCellValue('A1', 'ID');
-        $sheet->setCellValue('B1', 'User Email');
-        $sheet->setCellValue('C1', 'Total Price');
-        $sheet->setCellValue('D1', 'Status');
-        $sheet->setCellValue('E1', 'Date Time');
+        $sheet->setCellValue('B1', 'User ID');
+        $sheet->setCellValue('C1', 'User Email');
+        $sheet->setCellValue('D1', 'Username');
+        $sheet->setCellValue('E1', 'Total Price');
+        $sheet->setCellValue('F1', 'Status');
+        $sheet->setCellValue('G1', 'Date Time');
+        $sheet->setCellValue('H1', 'Product Name');
+        $sheet->setCellValue('I1', 'Quantity');
+        $sheet->setCellValue('J1', 'Price');
 
         $row = 2;
         foreach ($transactions as $transaction) {
-            $sheet->setCellValue('A' . $row, $transaction->id);
-            $sheet->setCellValue('B' . $row, $transaction->user->email);
-            $sheet->setCellValue('C' . $row, $transaction->total_price);
-            $sheet->setCellValue('D' . $row, $transaction->status);
-            $sheet->setCellValue('E' . $row, $transaction->created_at);
-            $row++;
+            foreach ($transaction->dtrans as $dtrans) {
+                $sheet->setCellValue('A' . $row, $transaction->id);
+                $sheet->setCellValue('B' . $row, $transaction->user->id);
+                $sheet->setCellValue('C' . $row, $transaction->user->email);
+                $sheet->setCellValue('D' . $row, $transaction->user->name);
+                $sheet->setCellValue('E' . $row, $transaction->total_price);
+                $sheet->setCellValue('F' . $row, $transaction->status);
+                $sheet->setCellValue('G' . $row, $transaction->created_at);
+                $sheet->setCellValue('H' . $row, $dtrans->product ? $dtrans->product->name : 'Product Deleted');
+                $sheet->setCellValue('I' . $row, $dtrans->quantity);
+                $sheet->setCellValue('J' . $row, $dtrans->price);
+                $row++;
+            }
         }
 
         $writer = new Xlsx($spreadsheet);
@@ -106,20 +92,8 @@ class AdminController extends Controller
 
     private function getTransactions($startDate, $endDate)
     {
-<<<<<<< HEAD
-        return HTrans::whereIn('status', ['paid', 'cancelled'])
+        return HTrans::whereIn('status', ['completed', 'cancelled'])
                     ->whereBetween('created_at', [$startDate, $endDate])
-=======
-        return HTrans::with(['dtrans.product', 'user'])
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->whereIn('status', ['completed', 'cancelled'])
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
-    public function reports(){
-        $htrans = HTrans::whereIn('status', ['completed', 'cancelled'])
->>>>>>> afc57ab1d36a520adca33238bfc12a63d7a5b96e
                     ->orderBy('created_at', 'desc')
                     ->get();
     }
