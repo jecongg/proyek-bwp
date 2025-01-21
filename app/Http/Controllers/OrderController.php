@@ -9,10 +9,11 @@ class OrderController extends Controller
 {
     public function index()
     {
-        $orders = HTrans::with('details.product')
-                       ->where('user_id', auth()->id())
-                       ->orderBy('created_at', 'desc')
-                       ->get();
+        $orders = HTrans::with(['details.product' => function ($query) {
+            $query->withTrashed();
+        }])->where('user_id', auth()->id())
+          ->orderBy('created_at', 'desc')
+          ->get();
 
         return view('customer.orders.index', compact('orders'));
     }
@@ -24,7 +25,10 @@ class OrderController extends Controller
                            ->with('error', 'You are not authorized to view this order.');
         }
 
-        $order->load('details.product');
+        $order->load(['details.product' => function ($query) {
+            $query->withTrashed();
+        }]);
+
         return view('customer.orders.show', compact('order'));
     }
 

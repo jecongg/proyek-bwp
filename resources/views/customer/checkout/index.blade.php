@@ -41,13 +41,13 @@
                                      alt="{{ $detail->product->name }}"
                                      class="checkout-item-image me-3">
                                 <div class="flex-grow-1">
-                                    <h6 class="mb-1">{{ $detail->product->name }}</h6>
-                                    <p class="mb-0 text-muted">
+                                    <h3 class="mb-1">{{ $detail->product->name }}</h3>
+                                    <p class="mb-0 text-muted" style="font-size: 1.2rem">
                                         {{ $detail->quantity }} x Rp {{ number_format($detail->product->price, 0, ',', '.') }}
                                     </p>
                                 </div>
                                 <div class="text-end">
-                                    <p class="mb-0 fw-bold">
+                                    <p class="mb-0 fw-bold" style="font-size: 1.6rem">
                                         Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
                                     </p>
                                 </div>
@@ -61,11 +61,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title mb-4">Order Summary</h5>
-                        <div class="d-flex justify-content-between mb-3">
+                        <div class="d-flex justify-content-between mb-3" style="font-size: 1.2rem">
                             <span>Total Items</span>
                             <span>{{ $cart->details->sum('quantity') }}</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-4">
+                        <div class="d-flex justify-content-between mb-4" style="font-size: 1.2rem">
                             <span>Total Price</span>
                             <span class="fw-bold">Rp {{ number_format($cart->total, 0, ',', '.') }}</span>
                         </div>
@@ -78,11 +78,27 @@
 </div>
 
 <style>
+    .section-title {
+        font-size: 2.5rem;
+    }
+    .form-label {
+        font-size: 1.5rem;
+    }
+    .form-control {
+        font-size: 1.25rem;
+    }
+    .card-title {
+        font-size: 1.75rem;
+    }
+    .btn {
+        font-size: 1.25rem;
+    }
     .checkout-item-image {
-        width: 80px;
-        height: 80px;
+        width: 150px;
+        height: 150px;
         object-fit: cover;
         border-radius: 8px;
     }
+
 </style>
 @endsection

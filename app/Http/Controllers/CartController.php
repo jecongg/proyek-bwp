@@ -7,15 +7,29 @@ use App\Models\DCart;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
     public function index()
     {
-        $cart = Cart::with('details.product')->firstOrCreate(['user_id' => auth()->id()]);
+        $cart = Cart::with(['details.product' => function ($query) {
+            $query->withTrashed(); // Include soft deleted products
+        }])->firstOrCreate(['user_id' => Auth::id()]);
+
         if (!$cart->details) {
             $cart->setRelation('details', collect([]));
         }
+
+        // Filter out items with soft deleted products and remove them from the cart
+        $cart->details = $cart->details->filter(function ($detail) {
+            if ($detail->product && $detail->product->trashed()) {
+                $detail->delete(); // Remove the item from the cart
+                return false;
+            }
+            return true;
+        });
+
         return view('customer.cart.index', compact('cart'));
     }
 
