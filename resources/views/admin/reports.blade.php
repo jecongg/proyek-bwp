@@ -2,6 +2,25 @@
 
 @section('content')
 <div class="container my-5">
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Generate Reports</h1>
+
+        <form action="{{ route('admin.reports.handle') }}" method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Date Start</label>
+                <input type="date" name="start_date" class="form-control" required>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Date End</label>
+                <input type="date" name="end_date" class="form-control" required>
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" name="action" value="generate" class="btn btn-primary btn-lg">Generate Reports Here</button>
+                <button type="submit" name="action" value="export" class="btn btn-secondary btn-lg ms-2">Export to Excel File</button>
+            </div>
+        </form>
+    </div>
+    
     <h2 class="section-title mb-4">Transaction Reports</h2>
 
     <div class="card">
@@ -45,24 +64,7 @@
         </div>
     </div>
 
-    <div class="container my-5">
-        <h1 class="text-center mb-4">Generate Reports</h1>
 
-        <form action="{{ route('admin.reports.handle') }}" method="GET" class="row g-3">
-            <div class="col-md-4">
-                <label class="form-label">Date Start</label>
-                <input type="date" name="start_date" class="form-control" required>
-            </div>
-            <div class="col-md-4">
-                <label class="form-label">Date End</label>
-                <input type="date" name="end_date" class="form-control" required>
-            </div>
-            <div class="col-md-4 d-flex align-items-end">
-                <button type="submit" name="action" value="generate" class="btn btn-primary btn-lg">Generate Reports Here</button>
-                <button type="submit" name="action" value="export" class="btn btn-secondary btn-lg ms-2">Export to Excel File</button>
-            </div>
-        </form>
-    </div>
 </div>
 
 <style>
